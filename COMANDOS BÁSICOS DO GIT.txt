@@ -1,0 +1,173 @@
+## 📚 COMANDOS BÁSICOS DO GIT - GUIA SIMPLES
+
+Aqui estão os comandos essenciais que seu grupo vai precisar. **Sem complicação, só o básico que funciona.**
+
+---
+
+# 🎯 COMANDOS QUE TODOS PRECISAM SABER
+
+## 1. CLONAR O REPOSITÓRIO (baixar o projeto pela primeira vez)
+
+```bash
+git clone https://github.com/RayssaLGSV207/Sistema-Venda-Geek.git
+```
+
+> Faz o quê? Baixa todo o projeto para o computador.
+
+---
+
+## 2. VER EM QUAL BRANCH VOCÊ ESTÁ
+
+```bash
+git branch
+```
+
+> Faz o quê? Mostra todas as branches e qual você está (a que tem *)
+
+---
+
+## 3. MUDAR DE BRANCH (entrar na sua branch)
+
+```bash
+git checkout nome-da-branch
+```
+
+**Exemplo:**
+```bash
+git checkout feature/aluno-d-interface
+```
+
+> Faz o quê? Troca para a branch que você vai trabalhar.
+
+---
+
+## 4. VER O QUE FOI ALTERADO
+
+```bash
+git status
+```
+
+> Faz o quê? Mostra quais arquivos você modificou. **USE SEMPRE ANTES DE COMMIT!**
+
+---
+
+## 5. ADICIONAR ALTERAÇÕES (preparar para salvar)
+
+```bash
+git add .
+```
+
+> Faz o quê? Prepara TODOS os arquivos modificados para serem salvos.
+
+**Variações:**
+```bash
+git add nome-do-arquivo.cs   # Adiciona só um arquivo específico
+```
+
+---
+
+## 6. SALVAR ALTERAÇÕES (commit)
+
+```bash
+git commit -m "descrição do que você fez"
+```
+
+**Exemplo:**
+```bash
+git commit -m "cria tela de login com botões"
+```
+
+> Faz o quê? Salva as alterações localmente com uma mensagem explicando o que foi feito.
+
+**Regra importante:** A mensagem deve ser clara e em português!
+
+---
+
+## 7. ENVIAR PARA O GITHUB (push)
+
+```bash
+git push origin nome-da-sua-branch
+```
+
+**Exemplo:**
+```bash
+git push origin feature/aluno-d-interface
+```
+
+> Faz o quê? Envia o código salvo para o GitHub (para os outros verem).
+
+---
+
+## 8. BAIXAR ALTERAÇÕES DOS OUTROS (pull)
+
+```bash
+git pull origin main
+```
+
+> Faz o quê? Baixa as últimas alterações que alguém enviou.
+MAS ATENÇÃO: CADA ALUNO DEVE DAR PULL NA SUA PRÓPRIA BRANCH, NÃO NA MAIN!
+---
+
+# 📋 FLUXO COMPLETO DO DIA A DIA (COLA NA PAREDE)
+
+```bash
+# 1. Entrar na sua branch
+git checkout feature/aluno-X-sua-branch
+
+# 2. Ver o que mudou (sempre antes de commit!)
+git status
+
+# 3. Adicionar tudo que mudou
+git add .
+
+# 4. Salvar com uma mensagem
+git commit -m "descrição clara do que fiz"
+
+# 5. Enviar para o GitHub
+git push origin feature/aluno-X-sua-branch
+```
+
+---
+
+# 🚨 COMANDOS PARA SITUAÇÕES DE ERRO
+
+## Desfazer alterações que você ainda não salvou
+
+```bash
+git restore nome-do-arquivo
+```
+
+## Voltar um commit que você acabou de fazer (mas ainda não enviou)
+
+```bash
+git reset --soft HEAD~1
+```
+
+## Baixar as novidades do GitHub sem misturar com seu código
+
+```bash
+git fetch origin
+```
+
+---
+
+# 📝 RESUMÃO (O QUE CADA ALUNO VAI USAR MAIS)
+
+|          Situação            |               Comando                 |
+|------------------------------|---------------------------------------|
+| Baixar o projeto pela 1ª vez | `git clone https://...`               |
+| Entrar na sua branch         | `git checkout feature/aluno-X-...`    |
+| Ver o que mudou              | `git status`                          |
+| Preparar para salvar         | `git add .`                           |
+| Salvar                       | `git commit -m "mensagem"`            |
+| Enviar para o GitHub         | `git push origin feature/aluno-X-...` |
+| Baixar atualizações          | `git pull origin main`                |
+
+---
+
+# 💡 DICAS IMPORTANTES
+
+1. **SEMPRE** use `git status` antes de qualquer commit
+2. **SEMPRE** faça commit com mensagens claras
+3. **NUNCA** trabalhe direto na branch `main`
+4. **SEMPRE** verifique em qual branch você está com `git branch`
