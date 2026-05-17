@@ -52,7 +52,7 @@ namespace SistemaVendaGeek.Database
                 using (var cmd = new SQLiteCommand(sqlProduto, conn))
                     cmd.ExecuteNonQuery();
 
-                // Tabela Cliente (COMPLETA)
+                // Tabela Cliente
                 string sqlCliente = @"
                     CREATE TABLE Cliente (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -103,10 +103,8 @@ namespace SistemaVendaGeek.Database
             using (var conn = new SQLiteConnection(_connectionString))
             {
                 conn.Open();
-
-                // =============================================
+                
                 // USUARIOS DE TESTE (3 usuários)
-                // =============================================
                 string sqlUsuarios = @"
                     INSERT OR IGNORE INTO Usuario (Login, Senha, Perfil) VALUES
                     ('atendente', '123', 'Atendente'),
@@ -115,13 +113,11 @@ namespace SistemaVendaGeek.Database
                 using (var cmd = new SQLiteCommand(sqlUsuarios, conn))
                     cmd.ExecuteNonQuery();
 
-                // =============================================
-                // 30 PRODUTOS GEEK (COM CODIGOS FACIL DE LEMBRAR)
-                // =============================================
+                // 30 PRODUTOS GEEK (COM CODIGOS FACIL)
                 string sqlProdutos = @"
                     INSERT OR IGNORE INTO Produto (CodigoBarras, Nome, Categoria, Fabricante, Valor, QuantidadeEstoque, IsRaro, Plataforma, PrazoGarantia) VALUES
                     -- JOGOS (10 itens)
-                    ('789123456', 'The Legend of Zelda: Tears of the Kingdom', 'Jogo', 'Nintendo', 349.90, 25, 0, 'Switch', 12),
+                    ('JOGO001', 'The Legend of Zelda: Tears of the Kingdom', 'Jogo', 'Nintendo', 349.90, 25, 0, 'Switch', 12),
                     ('JOGO002', 'God of War Ragnarok', 'Jogo', 'Sony', 299.90, 30, 0, 'PS5', 12),
                     ('JOGO003', 'Hogwarts Legacy', 'Jogo', 'Warner Bros', 249.90, 20, 0, 'Multiplataforma', 12),
                     ('JOGO004', 'Elden Ring', 'Jogo', 'Bandai Namco', 199.90, 15, 0, 'Multiplataforma', 12),
@@ -147,13 +143,18 @@ namespace SistemaVendaGeek.Database
                     ('ACC007', 'Suporte de Parede para Controle', 'Acessorio', 'Generic', 49.90, 30, 0, 'Gamer', 3),
                     ('ACC008', 'Carregador Portatil Switch', 'Acessorio', 'Nintendo', 199.90, 8, 0, 'Switch', 6),
                     ('ACC009', 'Fone de Ouvido Gamer', 'Acessorio', 'Razer', 329.90, 15, 0, 'Multiplataforma', 6),
-                    ('ACC010', 'Mousepad RGB', 'Acessorio', 'Redragon', 89.90, 25, 0, 'PC', 3)";
+                    ('ACC010', 'Mousepad RGB', 'Acessorio', 'Redragon', 89.90, 25, 0, 'PC', 3)
+                    -- NOVOS PRODUTOS GEEK (5 itens)
+                    ('GEEK001', 'Caneca Stormtropper', 'Produto Geek', 'Star Wars', 49.90, 50, 0, 'N/A', 3),
+                    ('GEEK002', 'Camiseta Gamer - I Love Games', 'Produto Geek', 'Geek Store', 79.90, 40, 0, 'N/A', 3),
+                    ('GEEK003', 'Capa para Notebook Gamer', 'Produto Geek', 'Razer', 129.90, 15, 0, 'N/A', 6),
+                    ('GEEK004', 'Chaveiro LED Mario Bros', 'Produto Geek', 'Nintendo', 19.90, 100, 0, 'N/A', 3),
+                    ('GEEK005', 'Pelucia Pikachu 30cm', 'Produto Geek', 'Pokemon', 89.90, 25, 0, 'N/A', 3)";
+                    
                 using (var cmd = new SQLiteCommand(sqlProdutos, conn))
                     cmd.ExecuteNonQuery();
 
-                // =============================================
                 // 20 CLIENTES CADASTRADOS
-                // =============================================
                 string sqlClientes = @"
                     INSERT OR IGNORE INTO Cliente (Nome, CPF, RG, DataCadastro, Endereco, Telefone, Email) VALUES
                     ('Joao Silva', '11122233344', 'MG11122233', date('now'), 'Rua das Flores, 100 - Centro, Sao Paulo/SP', '(11) 91234-5678', 'joao.silva@email.com'),
