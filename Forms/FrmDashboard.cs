@@ -59,7 +59,7 @@ namespace SistemaVendaGeek.Forms
             this.pnlMenu.Location = new Point(25, 80);
             this.pnlMenu.BackColor = Color.Transparent;
 
-            // LINHA 1: Nova Venda e Consultar Preco
+            // Nova Venda e Consultar Preco
             this.btnNovaVenda.Text = "NOVA VENDA";
             this.btnNovaVenda.Size = new Size(240, 75);
             this.btnNovaVenda.Location = new Point(40, 20);
@@ -84,7 +84,7 @@ namespace SistemaVendaGeek.Forms
             this.btnConsultarPreco.Cursor = Cursors.Hand;
             this.btnConsultarPreco.Click += BtnConsultarPreco_Click;
 
-            // LINHA 2: Gestao de Produtos e Cadastrar Clientes
+            // Gestao de Produtos e Cadastrar Clientes
             this.btnGestaoProdutos.Text = "GESTAO DE PRODUTOS";
             this.btnGestaoProdutos.Size = new Size(240, 75);
             this.btnGestaoProdutos.Location = new Point(40, 120);
@@ -109,7 +109,7 @@ namespace SistemaVendaGeek.Forms
             this.btnCadastrarCliente.Cursor = Cursors.Hand;
             this.btnCadastrarCliente.Click += BtnCadastrarCliente_Click;
 
-            // LINHA 3: Consultar Vendas (centralizado)
+            // Consultar Vendas (centralizado)
             this.btnConsultarVendas.Text = "CONSULTAR VENDAS";
             this.btnConsultarVendas.Size = new Size(280, 75);
             this.btnConsultarVendas.Location = new Point(260, 230);
@@ -122,7 +122,7 @@ namespace SistemaVendaGeek.Forms
             this.btnConsultarVendas.Cursor = Cursors.Hand;
             this.btnConsultarVendas.Click += BtnConsultarVendas_Click;
 
-            // LINHA 4: Trocar Login e Sair (lado a lado)
+            // Trocar Login e Sair (lado a lado)
             this.btnTrocarLogin.Text = "TROCAR LOGIN";
             this.btnTrocarLogin.Size = new Size(220, 75);
             this.btnTrocarLogin.Location = new Point(130, 350);
