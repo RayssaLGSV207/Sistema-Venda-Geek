@@ -142,9 +142,7 @@ namespace SistemaVendaGeek.Forms
             this.lblTitulo.TextAlign = ContentAlignment.MiddleCenter;
             this.lblTitulo.ForeColor = Color.Black;
 
-            // ================================================
             // GROUPBOX CLIENTE
-            // ================================================
             this.gbxCliente.Text = "DADOS DO CLIENTE";
             this.gbxCliente.Font = new Font("Arial", 12, FontStyle.Bold);
             this.gbxCliente.Size = new Size(950, 100);
@@ -191,16 +189,14 @@ namespace SistemaVendaGeek.Forms
             this.gbxCliente.Controls.Add(this.lblClienteNome);
             this.gbxCliente.Controls.Add(this.txtClienteNome);
 
-            // ================================================
             // GROUPBOX PRODUTO
-            // ================================================
             this.gbxProduto.Text = "ADICIONAR PRODUTO";
             this.gbxProduto.Font = new Font("Arial", 12, FontStyle.Bold);
             this.gbxProduto.Size = new Size(950, 110);
             this.gbxProduto.Location = new Point(20, 180);
             this.gbxProduto.Padding = new Padding(10);
 
-            // LINHA 1: Codigo de Barras
+            // Codigo de Barras
             this.lblCodigoBarras.Text = "CODIGO DE BARRAS:";
             this.lblCodigoBarras.Font = new Font("Arial", 12, FontStyle.Bold);
             this.lblCodigoBarras.Size = new Size(265, 35);
@@ -211,7 +207,7 @@ namespace SistemaVendaGeek.Forms
             this.txtCodigoBarras.Location = new Point(260, 20);
             this.txtCodigoBarras.Font = new Font("Arial", 12);
 
-            // LINHA 2: Quantidade e Botao Adicionar
+            // Quantidade e Botao Adicionar
             this.lblQuantidade.Text = "QUANTIDADE:";
             this.lblQuantidade.Font = new Font("Arial", 12, FontStyle.Bold);
             this.lblQuantidade.Size = new Size(150, 35);
@@ -243,9 +239,7 @@ namespace SistemaVendaGeek.Forms
             this.gbxProduto.Controls.Add(this.numQuantidade);
             this.gbxProduto.Controls.Add(this.btnAdicionar);
 
-            // ================================================
             // GROUPBOX CARRINHO
-            // ================================================
             this.gbxCarrinho.Text = "CARRINHO DE COMPRAS";
             this.gbxCarrinho.Font = new Font("Arial", 12, FontStyle.Bold);
             this.gbxCarrinho.Size = new Size(950, 300);
@@ -274,7 +268,7 @@ namespace SistemaVendaGeek.Forms
             this.dgvCarrinho.Columns[4].Name = "Subtotal";
             this.dgvCarrinho.Columns[4].HeaderText = "SUBTOTAL";
 
-            // Botao Remover Item - NA ESQUERDA DO CARRINHO
+            // Botao Remover Item
             this.btnRemoverItem.Text = "REMOVER ITEM";
             this.btnRemoverItem.Size = new Size(150, 40);
             this.btnRemoverItem.Location = new Point(15, 240);
@@ -287,7 +281,7 @@ namespace SistemaVendaGeek.Forms
             this.btnRemoverItem.Cursor = Cursors.Hand;
             this.btnRemoverItem.Click += btnRemoverItem_Click;
 
-            // TOTAL DA COMPRA - MAIS À ESQUERDA
+            // TOTAL DA COMPRA
             this.lblTotal.Text = "TOTAL DA COMPRA:";
             this.lblTotal.Font = new Font("Arial", 16, FontStyle.Bold);
             this.lblTotal.Size = new Size(290, 40);
@@ -308,9 +302,7 @@ namespace SistemaVendaGeek.Forms
             this.gbxCarrinho.Controls.Add(this.lblTotal);
             this.gbxCarrinho.Controls.Add(this.txtTotal);
 
-            // ================================================
             // GROUPBOX FINALIZACAO
-            // ================================================
             this.gbxFinalizacao.Text = "FINALIZACAO DA VENDA";
             this.gbxFinalizacao.Font = new Font("Arial", 12, FontStyle.Bold);
             this.gbxFinalizacao.Size = new Size(955, 110);
@@ -331,7 +323,7 @@ namespace SistemaVendaGeek.Forms
             this.cmbFormaPagamento.Items.AddRange(new string[] { "Dinheiro", "Cartao de Credito", "Cartao de Debito", "PIX" });
             this.cmbFormaPagamento.SelectedIndex = 0;
 
-            // BOTOES - MAIS À ESQUERDA
+            // BOTOES
             this.btnVoltar.Text = "VOLTAR";
             this.btnVoltar.Size = new Size(130, 48);
             this.btnVoltar.Location = new Point(350, 45);
@@ -558,7 +550,7 @@ private void btnFinalizar_Click(object sender, EventArgs e)
     int quantidade = Convert.ToInt32(dgvCarrinho.Rows[0].Cells["Quantidade"].Value);
     decimal total = decimal.Parse(txtTotal.Text);
 
-    // CORRIGIDO: Usa o método existente RegistrarVenda
+    // Usa o método existente RegistrarVenda
     string codigoVenda = VendaService.RegistrarVenda(codigoBarras, quantidade, txtClienteCPF.Text.Trim());
     
     // Se não retornou código, cria um novo
@@ -611,11 +603,9 @@ private void btnFinalizar_Click(object sender, EventArgs e)
                 return;
             }
 
-            // ================================================
             // VERIFICA SE PRECISA DE AUTORIZACAO
             // Apenas ATENDENTE precisa de autorizacao do supervisor
             // SUPERVISOR pode cancelar diretamente
-            // ================================================
             if (_perfilUsuario == "Atendente")
             {
                 Form credForm = new Form();
@@ -697,7 +687,7 @@ private void btnFinalizar_Click(object sender, EventArgs e)
 
                 if (!credenciaisValidas)
                 {
-                    return; // Cancelou a operação porque credenciais são inválidas
+                    return; 
                 }
             }
             // Se for Supervisor, continua direto sem pedir autenticação
