@@ -11,9 +11,7 @@ namespace SistemaVendaGeek.Services
         // Guarda o usuário que está logado no momento
         private static UsuarioAutenticado _usuarioLogado;
 
-        /// <summary>
-        /// Tenta fazer login com usuário e senha. Retorna true se conseguir e devolve o perfil.
-        /// </summary>
+        // Tenta fazer login com usuário e senha. Retorna true se conseguir e devolve o perfil.
         public static bool Autenticar(string login, string senha, out string perfil)
         {
             perfil = "";
