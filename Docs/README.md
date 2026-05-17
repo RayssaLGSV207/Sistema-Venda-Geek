@@ -1,4 +1,3 @@
-```markdown
 # 🎮 SISTEMA VENDA GEEK
 
 **Sistema desktop para gestão de vendas em loja de jogos, acessórios e produtos geek**
