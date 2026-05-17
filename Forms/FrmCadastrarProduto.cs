@@ -143,11 +143,8 @@ namespace SistemaVendaGeek.Forms
             this.tabControl.TabPages.Add(this.tabCadastrar);
             this.tabControl.TabPages.Add(this.tabAtualizar);
             
-            // ================================================
-            // ABA CADASTRAR - LAYOUT COM ESPACAMENTO
-            // ================================================
-            
-            // LINHA 1: Codigo de Barras
+            // ABA CADASTRAR            
+            // Codigo de Barras
             this.lblCodigoBarras.Text = "Codigo de Barras:";
             this.lblCodigoBarras.Font = new Font("Arial", 11, FontStyle.Bold);
             this.lblCodigoBarras.Size = new Size(200, 30);
@@ -158,7 +155,7 @@ namespace SistemaVendaGeek.Forms
             this.txtCodigoBarras.Location = new Point(230, 25);
             this.txtCodigoBarras.Font = new Font("Arial", 11);
             
-            // LINHA 2: Nome do Produto
+            // Nome do Produto
             this.lblNome.Text = "Nome do Produto:";
             this.lblNome.Font = new Font("Arial", 11, FontStyle.Bold);
             this.lblNome.Size = new Size(200, 30);
@@ -169,7 +166,7 @@ namespace SistemaVendaGeek.Forms
             this.txtNome.Location = new Point(230, 80);
             this.txtNome.Font = new Font("Arial", 11);
             
-            // LINHA 3: Categoria e Fabricante (lado a lado)
+            // Categoria e Fabricante (lado a lado)
             this.lblCategoria.Text = "Categoria:";
             this.lblCategoria.Font = new Font("Arial", 11, FontStyle.Bold);
             this.lblCategoria.Size = new Size(200, 30);
@@ -192,7 +189,7 @@ namespace SistemaVendaGeek.Forms
             this.txtFabricante.Location = new Point(620, 135);
             this.txtFabricante.Font = new Font("Arial", 11);
             
-            // LINHA 4: Quantidade Estoque e Valor (lado a lado)
+            // Quantidade Estoque e Valor (lado a lado)
             this.lblQuantidade.Text = "Quantidade Estoque:";
             this.lblQuantidade.Font = new Font("Arial", 11, FontStyle.Bold);
             this.lblQuantidade.Size = new Size(150, 30);
@@ -216,7 +213,7 @@ namespace SistemaVendaGeek.Forms
             this.txtValor.Text = "0,00";
             this.txtValor.Font = new Font("Arial", 11);
             
-            // LINHA 5: Plataforma
+            // Plataforma
             this.lblPlataforma.Text = "Plataforma:";
             this.lblPlataforma.Font = new Font("Arial", 11, FontStyle.Bold);
             this.lblPlataforma.Size = new Size(150, 30);
@@ -228,7 +225,7 @@ namespace SistemaVendaGeek.Forms
             this.txtPlataforma.Font = new Font("Arial", 11);
             this.txtPlataforma.Text = "PC, PS5, Xbox, Switch, etc.";
             
-            // LINHA 6: Garantia
+            // Garantia
             this.lblGarantia.Text = "Garantia (meses):";
             this.lblGarantia.Font = new Font("Arial", 11, FontStyle.Bold);
             this.lblGarantia.Size = new Size(200, 30);
@@ -240,7 +237,7 @@ namespace SistemaVendaGeek.Forms
             this.txtGarantia.Text = "12";
             this.txtGarantia.Font = new Font("Arial", 11);
             
-            // LINHA 7: Produto Raro
+            // Produto Raro
             this.lblIsRaro.Text = "Produto Raro:";
             this.lblIsRaro.Font = new Font("Arial", 11, FontStyle.Bold);
             this.lblIsRaro.Size = new Size(150, 30);
@@ -289,7 +286,7 @@ namespace SistemaVendaGeek.Forms
             this.btnVoltar.Cursor = Cursors.Hand;
             this.btnVoltar.Click += BtnVoltar_Click;
             
-            // Adicionar controles à aba Cadastrar
+            // Controles à aba Cadastrar
             this.tabCadastrar.Controls.Add(this.lblCodigoBarras);
             this.tabCadastrar.Controls.Add(this.txtCodigoBarras);
             this.tabCadastrar.Controls.Add(this.lblNome);
@@ -312,11 +309,8 @@ namespace SistemaVendaGeek.Forms
             this.tabCadastrar.Controls.Add(this.btnCancelar);
             this.tabCadastrar.Controls.Add(this.btnVoltar);
             
-            // ================================================
-            // ABA ATUALIZAR ESTOQUE - LAYOUT COM ESPACAMENTO
-            // ================================================
-            
-            // LINHA 1: Codigo de Barras e Botao Buscar
+            // ABA ATUALIZAR ESTOQUE - LAYOUT COM ESPACAMENTO          
+            // Codigo de Barras e Botao Buscar
             this.lblBuscarCodigo.Text = "Codigo de Barras:";
             this.lblBuscarCodigo.Font = new Font("Arial", 11, FontStyle.Bold);
             this.lblBuscarCodigo.Size = new Size(200, 30);
@@ -339,7 +333,7 @@ namespace SistemaVendaGeek.Forms
             this.btnBuscar.Cursor = Cursors.Hand;
             this.btnBuscar.Click += BtnBuscar_Click;
             
-            // LINHA 2: Nome do Produto
+            // Nome do Produto
             this.lblProdutoNome.Text = "Produto:";
             this.lblProdutoNome.Font = new Font("Arial", 11, FontStyle.Bold);
             this.lblProdutoNome.Size = new Size(150, 30);
@@ -352,7 +346,7 @@ namespace SistemaVendaGeek.Forms
             this.txtProdutoNome.ReadOnly = true;
             this.txtProdutoNome.BackColor = Color.LightGray;
             
-            // LINHA 3: Estoque Atual e Quantidade (lado a lado)
+            // Estoque Atual e Quantidade (lado a lado)
             this.lblEstoqueAtual.Text = "Estoque Atual:";
             this.lblEstoqueAtual.Font = new Font("Arial", 11, FontStyle.Bold);
             this.lblEstoqueAtual.Size = new Size(150, 30);
@@ -379,7 +373,7 @@ namespace SistemaVendaGeek.Forms
             this.numQtdOperacao.Maximum = 9999;
             this.numQtdOperacao.Value = 1;
             
-            // LINHA 4: Tipo de Operacao
+            // Tipo de Operacao
             this.lblTipoOperacao.Text = "Operacao:";
             this.lblTipoOperacao.Font = new Font("Arial", 11, FontStyle.Bold);
             this.lblTipoOperacao.Size = new Size(150, 30);
@@ -393,7 +387,7 @@ namespace SistemaVendaGeek.Forms
             this.cmbTipoOperacao.Items.AddRange(new string[] { "Adicionar ao Estoque", "Remover do Estoque" });
             this.cmbTipoOperacao.SelectedIndex = 0;
             
-            // LINHA 5: Botao Atualizar Estoque
+            // Botao Atualizar Estoque
             this.btnAtualizarEstoque.Text = "ATUALIZAR";
             this.btnAtualizarEstoque.Size = new Size(220, 55);
             this.btnAtualizarEstoque.Location = new Point(180, 280);
@@ -406,7 +400,7 @@ namespace SistemaVendaGeek.Forms
             this.btnAtualizarEstoque.Cursor = Cursors.Hand;
             this.btnAtualizarEstoque.Click += BtnAtualizarEstoque_Click;
             
-            // Adicionar controles à aba Atualizar
+            // controles à aba Atualizar
             this.tabAtualizar.Controls.Add(this.lblBuscarCodigo);
             this.tabAtualizar.Controls.Add(this.txtBuscarCodigo);
             this.tabAtualizar.Controls.Add(this.btnBuscar);
@@ -420,17 +414,14 @@ namespace SistemaVendaGeek.Forms
             this.tabAtualizar.Controls.Add(this.cmbTipoOperacao);
             this.tabAtualizar.Controls.Add(this.btnAtualizarEstoque);
             
-            // Adicionar controles ao panel central
+            // controles ao panel central
             this.pnlCentral.Controls.Add(this.lblTitulo);
             this.pnlCentral.Controls.Add(this.tabControl);
             
             this.Controls.Add(this.pnlCentral);
         }
         
-        // ================================================
-        // METODOS DE MENSAGEM
-        // ================================================
-        
+        // METODOS DE MENSAGEM        
         private void MostrarMensagemGrande(string titulo, string mensagem, MessageBoxIcon icone)
         {
             Form msgForm = new Form();
@@ -502,10 +493,7 @@ namespace SistemaVendaGeek.Forms
             return msgForm.ShowDialog();
         }
         
-        // ================================================
-        // EVENTOS DA ABA CADASTRAR
-        // ================================================
-        
+        // EVENTOS DA ABA CADASTRAR        
         private void BtnSalvar_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtCodigoBarras.Text))
@@ -569,10 +557,7 @@ namespace SistemaVendaGeek.Forms
             }
         }
         
-        // ================================================
-        // EVENTOS DA ABA ATUALIZAR ESTOQUE
-        // ================================================
-        
+        // EVENTOS DA ABA ATUALIZAR ESTOQUE      
         private void BtnBuscar_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtBuscarCodigo.Text))
