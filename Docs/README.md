@@ -1,5 +1,3 @@
-Com base nos arquivos do seu projeto, preparei um README.md completo, formal e educativo, com sumário, instruções detalhadas e explicações técnicas.
-
 ```markdown
 # 🎮 SISTEMA VENDA GEEK
 
