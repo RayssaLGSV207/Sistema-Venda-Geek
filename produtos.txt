@@ -1,0 +1,26 @@
+CODIGO;PRODUTO;CATEGORIA;PRECO;ESTOQUE;RARO
+789123456;The Legend of Zelda: Tears of the Kingdom;Jogo;349,90;25;Nao
+JOGO002;God of War Ragnarok;Jogo;299,90;30;Nao
+JOGO003;Hogwarts Legacy;Jogo;249,90;20;Nao
+JOGO004;Elden Ring;Jogo;199,90;15;Nao
+JOGO005;Spider-Man 2;Jogo;349,90;18;Nao
+JOGO006;Super Mario Wonder;Jogo;299,90;22;Nao
+JOGO007;Final Fantasy XVI;Jogo;279,90;12;Nao
+JOGO008;Starfield;Jogo;299,90;10;Nao
+JOGO009;Street Fighter 6;Jogo;249,90;20;Nao
+JOGO010;Resident Evil 4 Remake;Jogo;199,90;25;Nao
+RARE001;Zelda Ocarina of Time - Edicao Colecionador;Jogo;899,90;2;Sim
+RARE002;Super Mario 64 - Lacrado;Jogo;1499,90;1;Sim
+RARE003;Pokemon Red/Blue - Primeira Edicao;Jogo;2499,90;1;Sim
+RARE004;Funko Pop Chase - Edicao Limitada;Produto Geek;599,90;3;Sim
+RARE005;Action Figure Spider-Man - Autografada;Produto Geek;799,90;2;Sim
+ACC001;Controle Sem Fio DualSense;Acessorio;449,90;15;Nao
+ACC002;Controle Pro Switch;Acessorio;399,90;12;Nao
+ACC003;Headset Gamer HyperX;Acessorio;299,90;20;Nao
+ACC004;Teclado Mecanico RGB;Acessorio;349,90;10;Nao
+ACC005;Mouse Gamer Logitech G502;Acessorio;249,90;18;Nao
+ACC006;Cadeira Gamer;Acessorio;1299,90;5;Nao
+ACC007;Suporte de Parede para Controle;Acessorio;49,90;30;Nao
+ACC008;Carregador Portatil Switch;Acessorio;199,90;8;Nao
+ACC009;Fone de Ouvido Gamer;Acessorio;329,90;15;Nao
+ACC010;Mousepad RGB;Acessorio;89,90;25;Nao
