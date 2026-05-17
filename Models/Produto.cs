@@ -2,9 +2,7 @@ using System;
 
 namespace SistemaVendaGeek.Models
 {
-    /// <summary>
-    /// Representa um produto vendido na loja.
-    /// </summary>
+    // Representa um produto vendido na loja.
     public class Produto
     {
         public string CodigoBarras { get; set; }
