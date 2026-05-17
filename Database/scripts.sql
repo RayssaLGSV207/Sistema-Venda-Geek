@@ -55,18 +55,13 @@ CREATE TABLE ItemVenda (
     FOREIGN KEY (CodigoBarras) REFERENCES Produto(CodigoBarras)
 );
 
--- =============================================
 -- USUARIOS DE TESTE
--- =============================================
 INSERT OR IGNORE INTO Usuario (Login, Senha, Perfil) VALUES
 ('atendente', '123', 'Atendente'),
 ('supervisor', '123', 'Supervisor'),
 ('estoquista', '123', 'Estoquista');
 
--- =============================================
--- 30 PRODUTOS GEEK (COM CODIGOS FACIL DE LEMBRAR)
--- =============================================
-
+-- 30 PRODUTOS GEEK (COM CODIGOS FACIL)
 -- === JOGOS (15 itens) ===
 INSERT OR IGNORE INTO Produto (CodigoBarras, Nome, Categoria, Fabricante, Valor, QuantidadeEstoque, IsRaro, Plataforma, PrazoGarantia) VALUES
 ('JOGO001', 'The Legend of Zelda: Tears of the Kingdom', 'Jogo', 'Nintendo', 349.90, 25, 0, 'Switch', 12),
@@ -99,9 +94,15 @@ INSERT OR IGNORE INTO Produto (CodigoBarras, Nome, Categoria, Fabricante, Valor,
 ('ACC009', 'Fone de Ouvido Gamer', 'Acessorio', 'Razer', 329.90, 15, 0, 'Multiplataforma', 6),
 ('ACC010', 'Mousepad RGB', 'Acessorio', 'Redragon', 89.90, 25, 0, 'PC', 3);
 
--- =============================================
+-- === PRODUTOS GEEK (5 itens) ===
+('GEEK001', 'Caneca Stormtropper', 'Produto Geek', 'Star Wars', 49.90, 50, 0, 'N/A', 3),
+('GEEK002', 'Camiseta Gamer - I Love Games', 'Produto Geek', 'Geek Store', 79.90, 40, 0, 'N/A', 3),
+('GEEK003', 'Capa para Notebook Gamer', 'Produto Geek', 'Razer', 129.90, 15, 0, 'N/A', 6),
+('GEEK004', 'Chaveiro LED Mario Bros', 'Produto Geek', 'Nintendo', 19.90, 100, 0, 'N/A', 3),
+('GEEK005', 'Pelucia Pikachu 30cm', 'Produto Geek', 'Pokemon', 89.90, 25, 0, 'N/A', 3)";
+
+
 -- 20 CLIENTES CADASTRADOS
--- =============================================
 INSERT OR IGNORE INTO Cliente (Nome, CPF, RG, DataCadastro, Endereco, Telefone, Email) VALUES
 ('Joao Silva', '11122233344', 'MG11122233', date('now'), 'Rua das Flores, 100 - Centro, Sao Paulo/SP', '(11) 91234-5678', 'joao.silva@email.com'),
 ('Maria Oliveira', '22233344455', 'SP22233344', date('now'), 'Av. Paulista, 1000 - Bela Vista, Sao Paulo/SP', '(11) 92345-6789', 'maria.oliveira@email.com'),
@@ -124,10 +125,8 @@ INSERT OR IGNORE INTO Cliente (Nome, CPF, RG, DataCadastro, Endereco, Telefone, 
 ('Thiago Araujo', '99911133355', 'PB99911133', date('now'), 'Rua Diogo Velho, 200 - Joao Pessoa/PB', '(83) 99012-3456', 'thiago.araujo@email.com'),
 ('Renata Carvalho', '00022244466', 'SE00022244', date('now'), 'Rua Sao Cristovao, 100 - Aracaju/SE', '(79) 90123-4567', 'renata.carvalho@email.com');
 
--- =============================================
+    
 -- RELATORIOS
--- =============================================
-
 -- LISTAR TODOS OS PRODUTOS (30 itens)
 SELECT '=== LISTA DE PRODUTOS (30 ITENS) ===' as '';
 SELECT 
