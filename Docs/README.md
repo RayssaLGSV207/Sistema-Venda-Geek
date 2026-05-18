@@ -73,23 +73,23 @@ O SQLite foi escolhido por ser:
 O projeto segue o padrão de **arquitetura em camadas**:
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                     CAMADA DE APRESENTAÇÃO               │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐   │
-│  │FrmLogin  │ │FrmDashboard│ │FrmNovaVenda│ │FrmProduto│   │
-│  └──────────┘ └──────────┘ └──────────┘ └──────────┘   │
-├─────────────────────────────────────────────────────────┤
-│                     CAMADA DE SERVIÇOS                   │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐   │
-│  │AuthService│ │VendaService│ │ProdutoService│ │Cliente...│   │
-│  └──────────┘ └──────────┘ └──────────┘ └──────────┘   │
-├─────────────────────────────────────────────────────────┤
-│                     CAMADA DE ACESSO A DADOS             │
-│  ┌─────────────────────────────────────────────────────┐│
-│  │                 DatabaseHelper.cs                    ││
-│  │    (Criação do banco, conexões, tabelas, dados)     ││
-│  └─────────────────────────────────────────────────────┘│
-└─────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                   CAMADA DE APRESENTAÇÃO                     │
+│  ┌──────────┐ ┌────────────┐ ┌────────────┐ ┌──────────┐     │
+│  │FrmLogin  │ │FrmDashboard│ │FrmNovaVenda│ │FrmProduto│     │
+│  └──────────┘ └────────────┘ └────────────┘ └──────────┘     │
+├──────────────────────────────────────────────────────────────┤
+│                     CAMADA DE SERVIÇOS                       │
+│  ┌───────────┐ ┌────────────┐ ┌──────────────┐ ┌──────────┐  │
+│  │AuthService│ │VendaService│ │ProdutoService│ │Cliente...│  │
+│  └───────────┘ └────────────┘ └──────────────┘ └──────────┘  │
+├──────────────────────────────────────────────────────────────┤
+│                   CAMADA DE ACESSO A DADOS                   │
+│   ┌─────────────────────────────────────────────────────┐    │
+│   │                 DatabaseHelper.cs                   │    │
+│   │    (Criação do banco, conexões, tabelas, dados)     │    │
+│   └─────────────────────────────────────────────────────┘    │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ### Explicação das Camadas
@@ -124,11 +124,11 @@ O sistema possui **três perfis** com níveis diferentes de acesso:
 ### Fluxo de Autorização para Cancelamento
 
 ```
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+┌─────────────┐      ┌─────────────┐     ┌──────────────┐
 │  Atendente  │────▶│  Supervisor │────▶│ Cancelamento │
-│ solicita    │     │ autentica   │     │  da venda   │
-│ cancelamento│     │             │     │             │
-└─────────────┘     └─────────────┘     └─────────────┘
+│ solicita    │      │ autentica   │     │  da venda    │
+│ cancelamento│      │             │     │              │
+└─────────────┘      └─────────────┘     └──────────────┘
 ```
 
 ---
@@ -226,7 +226,7 @@ dotnet run
 
 ```
 ┌────────────────────────────────────────────────────────────┐
-│                    PRIMEIRA EXECUÇÃO                        │
+│                    PRIMEIRA EXECUÇÃO                       │
 ├────────────────────────────────────────────────────────────┤
 │ 1. O sistema verifica se o arquivo .db já existe           │
 │ 2. Se não existir, cria o arquivo SistemaVendaGeek.db      │
@@ -294,9 +294,9 @@ ItemVenda (Id PK, CodigoVenda FK, CodigoBarras FK, Quantidade, PrecoUnitario)
 ### Relacionamentos
 
 ```
-┌─────────┐     ┌─────────────┐     ┌─────────┐
+┌─────────┐      ┌─────────────┐     ┌─────────┐
 │ Cliente │────▶│    Venda    │◀────│ Produto │
-└─────────┘     └─────────────┘     └─────────┘
+└─────────┘      └─────────────┘     └─────────┘
                       │
                       ▼
                 ┌──────────┐
@@ -413,10 +413,10 @@ public static string ConsultarStatus(string codigoVenda)
 ### Fluxo de Venda Completo
 
 ```
-┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
-│  Login   │───▶│ Buscar   │───▶│Adicionar │───▶│Finalizar │
-│Atendente │    │ Cliente  │    │ Produtos │    │  Venda   │
-└──────────┘    └──────────┘    └──────────┘    └──────────┘
+┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
+│  Login   │───▶│ Buscar    │───▶│Adicionar │───▶│Finalizar │
+│Atendente │     │ Cliente  │     │ Produtos │     │  Venda   │
+└──────────┘     └──────────┘     └──────────┘     └──────────┘
                                                       │
                                                       ▼
                                               ┌──────────────┐
