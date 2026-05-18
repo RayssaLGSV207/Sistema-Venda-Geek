@@ -11,12 +11,19 @@ namespace SistemaVendaGeek.Database
 
         public static void CriarBanco()
         {
-            if (!File.Exists("SistemaVendaGeek.db"))
+            try
             {
-                SQLiteConnection.CreateFile("SistemaVendaGeek.db");
-                CriarTabelas();
-                InserirDadosTeste();
-                MessageBox.Show("Banco de dados criado com sucesso!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (!File.Exists("SistemaVendaGeek.db"))
+                {
+                    SQLiteConnection.CreateFile("SistemaVendaGeek.db");
+                    CriarTabelas();
+                    InserirDadosTeste();
+                    MessageBox.Show("✅ Banco de dados criado com 35 produtos, 3 usuários e 20 clientes!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"❌ ERRO: {ex.Message}", "Falha", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -103,7 +110,7 @@ namespace SistemaVendaGeek.Database
             using (var conn = new SQLiteConnection(_connectionString))
             {
                 conn.Open();
-                
+
                 // USUARIOS DE TESTE (3 usuários)
                 string sqlUsuarios = @"
                     INSERT OR IGNORE INTO Usuario (Login, Senha, Perfil) VALUES
@@ -113,10 +120,9 @@ namespace SistemaVendaGeek.Database
                 using (var cmd = new SQLiteCommand(sqlUsuarios, conn))
                     cmd.ExecuteNonQuery();
 
-                // 30 PRODUTOS GEEK (COM CODIGOS FACIL)
+                // 35 PRODUTOS GEEK (CORRETO - SEM COMENTÁRIOS DENTRO DO SQL)
                 string sqlProdutos = @"
                     INSERT OR IGNORE INTO Produto (CodigoBarras, Nome, Categoria, Fabricante, Valor, QuantidadeEstoque, IsRaro, Plataforma, PrazoGarantia) VALUES
-                    -- JOGOS (10 itens)
                     ('JOGO001', 'The Legend of Zelda: Tears of the Kingdom', 'Jogo', 'Nintendo', 349.90, 25, 0, 'Switch', 12),
                     ('JOGO002', 'God of War Ragnarok', 'Jogo', 'Sony', 299.90, 30, 0, 'PS5', 12),
                     ('JOGO003', 'Hogwarts Legacy', 'Jogo', 'Warner Bros', 249.90, 20, 0, 'Multiplataforma', 12),
@@ -127,13 +133,11 @@ namespace SistemaVendaGeek.Database
                     ('JOGO008', 'Starfield', 'Jogo', 'Bethesda', 299.90, 10, 0, 'Xbox/PC', 12),
                     ('JOGO009', 'Street Fighter 6', 'Jogo', 'Capcom', 249.90, 20, 0, 'Multiplataforma', 12),
                     ('JOGO010', 'Resident Evil 4 Remake', 'Jogo', 'Capcom', 199.90, 25, 0, 'Multiplataforma', 12),
-                    -- ITENS RAROS (5 itens - estoque limitado)
                     ('RARE001', 'Zelda Ocarina of Time - Edicao Colecionador', 'Jogo', 'Nintendo', 899.90, 2, 1, 'N64/Switch', 0),
                     ('RARE002', 'Super Mario 64 - Lacrado', 'Jogo', 'Nintendo', 1499.90, 1, 1, 'N64', 0),
                     ('RARE003', 'Pokemon Red/Blue - Primeira Edicao', 'Jogo', 'Nintendo', 2499.90, 1, 1, 'Game Boy', 0),
                     ('RARE004', 'Funko Pop Chase - Edicao Limitada', 'Produto Geek', 'Funko', 599.90, 3, 1, 'Colecionador', 0),
                     ('RARE005', 'Action Figure Spider-Man - Autografada', 'Produto Geek', 'Hasbro', 799.90, 2, 1, 'Colecionador', 0),
-                    -- ACESSORIOS (10 itens)
                     ('ACC001', 'Controle Sem Fio DualSense', 'Acessorio', 'Sony', 449.90, 15, 0, 'PS5', 6),
                     ('ACC002', 'Controle Pro Switch', 'Acessorio', 'Nintendo', 399.90, 12, 0, 'Switch', 6),
                     ('ACC003', 'Headset Gamer HyperX', 'Acessorio', 'HyperX', 299.90, 20, 0, 'Multiplataforma', 6),
@@ -143,14 +147,13 @@ namespace SistemaVendaGeek.Database
                     ('ACC007', 'Suporte de Parede para Controle', 'Acessorio', 'Generic', 49.90, 30, 0, 'Gamer', 3),
                     ('ACC008', 'Carregador Portatil Switch', 'Acessorio', 'Nintendo', 199.90, 8, 0, 'Switch', 6),
                     ('ACC009', 'Fone de Ouvido Gamer', 'Acessorio', 'Razer', 329.90, 15, 0, 'Multiplataforma', 6),
-                    ('ACC010', 'Mousepad RGB', 'Acessorio', 'Redragon', 89.90, 25, 0, 'PC', 3)
-                    -- NOVOS PRODUTOS GEEK (5 itens)
+                    ('ACC010', 'Mousepad RGB', 'Acessorio', 'Redragon', 89.90, 25, 0, 'PC', 3),
                     ('GEEK001', 'Caneca Stormtropper', 'Produto Geek', 'Star Wars', 49.90, 50, 0, 'N/A', 3),
                     ('GEEK002', 'Camiseta Gamer - I Love Games', 'Produto Geek', 'Geek Store', 79.90, 40, 0, 'N/A', 3),
                     ('GEEK003', 'Capa para Notebook Gamer', 'Produto Geek', 'Razer', 129.90, 15, 0, 'N/A', 6),
                     ('GEEK004', 'Chaveiro LED Mario Bros', 'Produto Geek', 'Nintendo', 19.90, 100, 0, 'N/A', 3),
                     ('GEEK005', 'Pelucia Pikachu 30cm', 'Produto Geek', 'Pokemon', 89.90, 25, 0, 'N/A', 3)";
-                    
+
                 using (var cmd = new SQLiteCommand(sqlProdutos, conn))
                     cmd.ExecuteNonQuery();
 
@@ -177,6 +180,7 @@ namespace SistemaVendaGeek.Database
                     ('Vanessa Dias', '88800022244', 'RN88800022', date('now'), 'Rua Chile, 400 - Natal/RN', '(84) 98901-2345', 'vanessa.dias@email.com'),
                     ('Thiago Araujo', '99911133355', 'PB99911133', date('now'), 'Rua Diogo Velho, 200 - Joao Pessoa/PB', '(83) 99012-3456', 'thiago.araujo@email.com'),
                     ('Renata Carvalho', '00022244466', 'SE00022244', date('now'), 'Rua Sao Cristovao, 100 - Aracaju/SE', '(79) 90123-4567', 'renata.carvalho@email.com')";
+                    
                 using (var cmd = new SQLiteCommand(sqlClientes, conn))
                     cmd.ExecuteNonQuery();
 
