@@ -181,15 +181,15 @@ namespace SistemaVendaGeek.Forms
             
             this.lblFabricante.Text = "Fabricante:";
             this.lblFabricante.Font = new Font("Arial", 11, FontStyle.Bold);
-            this.lblFabricante.Size = new Size(200, 30);
-            this.lblFabricante.Location = new Point(430, 135);
+            this.lblFabricante.Size = new Size(160, 30);
+            this.lblFabricante.Location = new Point(450, 135);
             this.lblFabricante.TextAlign = ContentAlignment.MiddleLeft;
             
             this.txtFabricante.Size = new Size(220, 35);
             this.txtFabricante.Location = new Point(620, 135);
             this.txtFabricante.Font = new Font("Arial", 11);
             
-            // Quantidade Estoque e Valor (lado a lado)
+            // Quantidade Estoque e Valor
             this.lblQuantidade.Text = "Quantidade Estoque:";
             this.lblQuantidade.Font = new Font("Arial", 11, FontStyle.Bold);
             this.lblQuantidade.Size = new Size(150, 30);
@@ -204,12 +204,12 @@ namespace SistemaVendaGeek.Forms
             
             this.lblValor.Text = "Valor (R$):";
             this.lblValor.Font = new Font("Arial", 11, FontStyle.Bold);
-            this.lblValor.Size = new Size(150, 30);
-            this.lblValor.Location = new Point(420, 190);
+            this.lblValor.Size = new Size(120, 30);
+            this.lblValor.Location = new Point(450, 190);
             this.lblValor.TextAlign = ContentAlignment.MiddleLeft;
             
             this.txtValor.Size = new Size(150, 35);
-            this.txtValor.Location = new Point(540, 190);
+            this.txtValor.Location = new Point(570, 190);
             this.txtValor.Text = "0,00";
             this.txtValor.Font = new Font("Arial", 11);
             
