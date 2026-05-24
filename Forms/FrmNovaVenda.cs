@@ -204,7 +204,7 @@ namespace SistemaVendaGeek.Forms
             this.lblCodigoBarras.TextAlign = ContentAlignment.MiddleLeft;
 
             this.txtCodigoBarras.Size = new Size(400, 35);
-            this.txtCodigoBarras.Location = new Point(260, 20);
+            this.txtCodigoBarras.Location = new Point(290, 20);
             this.txtCodigoBarras.Font = new Font("Arial", 12);
 
             // Quantidade e Botao Adicionar
