@@ -13,6 +13,10 @@ namespace SistemaVendaGeek.Forms
         private Button btnVoltar;
         private Panel pnlCentral;
         private string _perfilUsuario;
+        
+        private ComboBox cmbFiltroStatus;
+        private Button btnResumo;
+        private Button btnAtualizar;
 
         public FrmConsultarVendas(string perfilUsuario)
         {
@@ -27,31 +31,67 @@ namespace SistemaVendaGeek.Forms
             this.lblTitulo = new Label();
             this.dgvVendas = new DataGridView();
             this.btnVoltar = new Button();
+            this.cmbFiltroStatus = new ComboBox();
+            this.btnResumo = new Button();
+            this.btnAtualizar = new Button();
 
-            // FORMULARIO PRINCIPAL
             this.Text = "Consultar Vendas - Vendas Geek";
-            this.Size = new Size(900, 620);
+            this.Size = new Size(950, 720);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.WhiteSmoke;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
 
-            // PANEL CENTRAL
-            this.pnlCentral.Size = new Size(850, 560);
-            this.pnlCentral.Location = new Point(25, 20);
+            this.pnlCentral.Size = new Size(880, 660);
+            this.pnlCentral.Location = new Point(35, 20);
             this.pnlCentral.BackColor = Color.Transparent;
 
-            // TITULO
             this.lblTitulo.Text = "CONSULTAR VENDAS";
             this.lblTitulo.Font = new Font("Arial", 22, FontStyle.Bold);
-            this.lblTitulo.Size = new Size(850, 50);
+            this.lblTitulo.Size = new Size(880, 50);
             this.lblTitulo.Location = new Point(0, 10);
             this.lblTitulo.TextAlign = ContentAlignment.MiddleCenter;
             this.lblTitulo.ForeColor = Color.Black;
 
-            // DATAGRIDVIEW
-            this.dgvVendas.Size = new Size(820, 380);
-            this.dgvVendas.Location = new Point(15, 70);
+            Label lblFiltro = new Label();
+            lblFiltro.Text = "Filtrar por Status:";
+            lblFiltro.Font = new Font("Arial", 11, FontStyle.Bold);
+            lblFiltro.Size = new Size(150, 30);
+            lblFiltro.Location = new Point(15, 70);
+
+            this.cmbFiltroStatus = new ComboBox();
+            this.cmbFiltroStatus.Size = new Size(150, 30);
+            this.cmbFiltroStatus.Location = new Point(170, 70);
+            this.cmbFiltroStatus.Font = new Font("Arial", 11);
+            this.cmbFiltroStatus.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.cmbFiltroStatus.Items.AddRange(new string[] { "Todas", "Pendente", "Finalizada", "Cancelada" });
+            this.cmbFiltroStatus.SelectedIndex = 0;
+            this.cmbFiltroStatus.SelectedIndexChanged += (s, e) => CarregarVendas();
+
+            this.btnResumo = new Button();
+            this.btnResumo.Text = "RESUMO";
+            this.btnResumo.Size = new Size(120, 35);
+            this.btnResumo.Location = new Point(340, 68);
+            this.btnResumo.BackColor = Color.DodgerBlue;
+            this.btnResumo.ForeColor = Color.White;
+            this.btnResumo.Font = new Font("Arial", 11, FontStyle.Bold);
+            this.btnResumo.FlatStyle = FlatStyle.Flat;
+            this.btnResumo.Cursor = Cursors.Hand;
+            this.btnResumo.Click += BtnResumo_Click;
+
+            this.btnAtualizar = new Button();
+            this.btnAtualizar.Text = "ATUALIZAR";
+            this.btnAtualizar.Size = new Size(130, 35);
+            this.btnAtualizar.Location = new Point(480, 68);
+            this.btnAtualizar.BackColor = Color.LightGreen;
+            this.btnAtualizar.ForeColor = Color.Black;
+            this.btnAtualizar.Font = new Font("Arial", 11, FontStyle.Bold);
+            this.btnAtualizar.FlatStyle = FlatStyle.Flat;
+            this.btnAtualizar.Cursor = Cursors.Hand;
+            this.btnAtualizar.Click += (s, e) => CarregarVendas();
+
+            this.dgvVendas.Size = new Size(850, 440);
+            this.dgvVendas.Location = new Point(15, 115);
             this.dgvVendas.BackgroundColor = Color.White;
             this.dgvVendas.AllowUserToAddRows = false;
             this.dgvVendas.ReadOnly = true;
@@ -61,7 +101,6 @@ namespace SistemaVendaGeek.Forms
             this.dgvVendas.Font = new Font("Arial", 11);
             this.dgvVendas.RowTemplate.Height = 40;
 
-            // COLUNAS
             this.dgvVendas.ColumnCount = 5;
             this.dgvVendas.Columns[0].Name = "CodigoVenda";
             this.dgvVendas.Columns[0].HeaderText = "CODIGO";
@@ -74,20 +113,21 @@ namespace SistemaVendaGeek.Forms
             this.dgvVendas.Columns[4].Name = "ClienteCPF";
             this.dgvVendas.Columns[4].HeaderText = "CLIENTE CPF";
 
-            // BOTAO VOLTAR
             this.btnVoltar.Text = "VOLTAR";
             this.btnVoltar.Size = new Size(160, 50);
-            this.btnVoltar.Location = new Point(345, 470);
+            this.btnVoltar.Location = new Point(360, 575);
             this.btnVoltar.BackColor = Color.LightGray;
             this.btnVoltar.ForeColor = Color.Black;
             this.btnVoltar.Font = new Font("Arial", 12, FontStyle.Bold);
             this.btnVoltar.FlatStyle = FlatStyle.Flat;
-            this.btnVoltar.FlatAppearance.BorderSize = 2;
-            this.btnVoltar.FlatAppearance.BorderColor = Color.Gray;
             this.btnVoltar.Cursor = Cursors.Hand;
-            this.btnVoltar.Click += new EventHandler(btnVoltar_Click);
+            this.btnVoltar.Click += btnVoltar_Click;
 
             this.pnlCentral.Controls.Add(this.lblTitulo);
+            this.pnlCentral.Controls.Add(lblFiltro);
+            this.pnlCentral.Controls.Add(this.cmbFiltroStatus);
+            this.pnlCentral.Controls.Add(this.btnResumo);
+            this.pnlCentral.Controls.Add(this.btnAtualizar);
             this.pnlCentral.Controls.Add(this.dgvVendas);
             this.pnlCentral.Controls.Add(this.btnVoltar);
 
@@ -101,23 +141,36 @@ namespace SistemaVendaGeek.Forms
                 using (var conn = DatabaseHelper.GetConnection())
                 {
                     conn.Open();
-                    string sql = "SELECT CodigoVenda, DataVenda, ValorTotal, Status, ClienteCPF FROM Venda ORDER BY DataVenda DESC";
-                    using (var cmd = new SQLiteCommand(sql, conn))
-                    using (var leitor = cmd.ExecuteReader())
+                    string sql = "SELECT CodigoVenda, DataVenda, ValorTotal, Status, ClienteCPF FROM Venda";
+                    
+                    string filtro = cmbFiltroStatus?.SelectedItem?.ToString();
+                    if (filtro != null && filtro != "Todas")
                     {
-                        dgvVendas.Rows.Clear();
-                        while (leitor.Read())
+                        sql += " WHERE Status = @status";
+                    }
+                    sql += " ORDER BY DataVenda DESC";
+                    
+                    using (var cmd = new SQLiteCommand(sql, conn))
+                    {
+                        if (filtro != null && filtro != "Todas")
+                            cmd.Parameters.AddWithValue("@status", filtro);
+                        
+                        using (var leitor = cmd.ExecuteReader())
                         {
-                            string codigo = leitor["CodigoVenda"].ToString();
-                            string codigoExibido = codigo.Length > 8 ? codigo.Substring(0, 8) : codigo;
-                            
-                            dgvVendas.Rows.Add(
-                                codigoExibido,
-                                leitor["DataVenda"].ToString(),
-                                $"R$ {Convert.ToDecimal(leitor["ValorTotal"]):F2}",
-                                leitor["Status"].ToString(),
-                                leitor["ClienteCPF"].ToString()
-                            );
+                            dgvVendas.Rows.Clear();
+                            while (leitor.Read())
+                            {
+                                string codigo = leitor["CodigoVenda"].ToString();
+                                string codigoExibido = codigo.Length > 8 ? codigo.Substring(0, 8) : codigo;
+                                
+                                dgvVendas.Rows.Add(
+                                    codigoExibido,
+                                    leitor["DataVenda"].ToString(),
+                                    $"R$ {Convert.ToDecimal(leitor["ValorTotal"]):F2}",
+                                    leitor["Status"].ToString(),
+                                    leitor["ClienteCPF"].ToString()
+                                );
+                            }
                         }
                     }
                 }
@@ -126,6 +179,136 @@ namespace SistemaVendaGeek.Forms
             {
                 MostrarMensagemGrande("Erro", $"Erro ao carregar vendas: {ex.Message}", MessageBoxIcon.Error);
             }
+        }
+
+        private void BtnResumo_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (var conn = DatabaseHelper.GetConnection())
+                {
+                    conn.Open();
+                    
+                    string nl = Environment.NewLine;
+                    
+                    string sqlStatus = @"
+                        SELECT Status, COUNT(*) as Quantidade, SUM(ValorTotal) as ValorTotal 
+                        FROM Venda 
+                        GROUP BY Status";
+                    
+                    string resumo = "RESUMO DE VENDAS" + nl + nl;
+                    
+                    using (var cmd = new SQLiteCommand(sqlStatus, conn))
+                    using (var leitor = cmd.ExecuteReader())
+                    {
+                        decimal totalGeral = 0;
+                        int totalVendas = 0;
+                        
+                        while (leitor.Read())
+                        {
+                            string status = leitor["Status"].ToString();
+                            int qtd = Convert.ToInt32(leitor["Quantidade"]);
+                            decimal valor = Convert.ToDecimal(leitor["ValorTotal"]);
+                            
+                            resumo += "  " + status + ": " + qtd + " venda(s) - R$ " + valor.ToString("F2") + nl;
+                            totalVendas += qtd;
+                            totalGeral += valor;
+                        }
+                        
+                        resumo += nl + "  TOTAL GERAL: " + totalVendas + " venda(s) - R$ " + totalGeral.ToString("F2") + nl;
+                    }
+                    
+                    string sqlEstoqueBaixo = @"
+                        SELECT CodigoBarras, Nome, QuantidadeEstoque 
+                        FROM Produto 
+                        WHERE QuantidadeEstoque < 5 
+                        ORDER BY QuantidadeEstoque ASC";
+                    
+                    resumo += nl + nl + "PRODUTOS COM ESTOQUE BAIXO (menos de 5 unidades)" + nl + nl;
+                    
+                    using (var cmd = new SQLiteCommand(sqlEstoqueBaixo, conn))
+                    using (var leitor = cmd.ExecuteReader())
+                    {
+                        bool hasLowStock = false;
+                        while (leitor.Read())
+                        {
+                            hasLowStock = true;
+                            string codigo = leitor["CodigoBarras"].ToString();
+                            string nome = leitor["Nome"].ToString();
+                            int estoque = Convert.ToInt32(leitor["QuantidadeEstoque"]);
+                            resumo += "  " + codigo + " - " + nome + " | Estoque: " + estoque + nl;
+                        }
+                        if (!hasLowStock)
+                            resumo += "  Nenhum produto com estoque baixo." + nl;
+                    }
+                    
+                    string sqlCategoria = @"
+                        SELECT Categoria, 
+                               COUNT(*) as TotalProdutos,
+                               SUM(QuantidadeEstoque) as TotalUnidades,
+                               SUM(Valor * QuantidadeEstoque) as ValorTotalEstoque
+                        FROM Produto 
+                        GROUP BY Categoria
+                        ORDER BY Categoria";
+                    
+                    resumo += nl + nl + "ESTOQUE POR CATEGORIA" + nl + nl;
+                    
+                    using (var cmd = new SQLiteCommand(sqlCategoria, conn))
+                    using (var leitor = cmd.ExecuteReader())
+                    {
+                        while (leitor.Read())
+                        {
+                            string categoria = leitor["Categoria"].ToString();
+                            int totalProdutos = Convert.ToInt32(leitor["TotalProdutos"]);
+                            int totalUnidades = Convert.ToInt32(leitor["TotalUnidades"]);
+                            decimal valorTotal = Convert.ToDecimal(leitor["ValorTotalEstoque"]);
+                            
+                            resumo += "  " + categoria + nl;
+                            resumo += "    Produtos: " + totalProdutos + nl;
+                            resumo += "    Unidades: " + totalUnidades + nl;
+                            resumo += "    Valor: R$ " + valorTotal.ToString("F2") + nl + nl;
+                        }
+                    }
+                    
+                    MostrarResumoGrande("RELATORIO COMPLETO", resumo);
+                }
+            }
+            catch (Exception ex)
+            {
+                MostrarMensagemGrande("Erro", "Erro ao gerar resumo: " + ex.Message, MessageBoxIcon.Error);
+            }
+        }
+
+        private void MostrarResumoGrande(string titulo, string mensagem)
+        {
+            Form msgForm = new Form();
+            msgForm.Text = titulo;
+            msgForm.Size = new Size(650, 600);
+            msgForm.StartPosition = FormStartPosition.CenterParent;
+            msgForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+            msgForm.BackColor = Color.WhiteSmoke;
+
+            RichTextBox txtResumo = new RichTextBox();
+            txtResumo.Text = mensagem;
+            txtResumo.Font = new Font("Arial", 11);
+            txtResumo.Size = new Size(600, 480);
+            txtResumo.Location = new Point(20, 20);
+            txtResumo.Multiline = true;
+            txtResumo.ReadOnly = true;
+
+            Button btnOk = new Button();
+            btnOk.Text = "FECHAR";
+            btnOk.Size = new Size(100, 40);
+            btnOk.Location = new Point(265, 515);
+            btnOk.BackColor = Color.DodgerBlue;
+            btnOk.ForeColor = Color.White;
+            btnOk.Font = new Font("Arial", 11, FontStyle.Bold);
+            btnOk.FlatStyle = FlatStyle.Flat;
+            btnOk.Click += (s, ev) => msgForm.Close();
+
+            msgForm.Controls.Add(txtResumo);
+            msgForm.Controls.Add(btnOk);
+            msgForm.ShowDialog();
         }
 
         private void MostrarMensagemGrande(string titulo, string mensagem, MessageBoxIcon icone)

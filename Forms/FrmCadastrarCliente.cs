@@ -1,6 +1,7 @@
 using System;
 using System.Data.SQLite;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using SistemaVendaGeek.Database;
 
@@ -54,7 +55,6 @@ namespace SistemaVendaGeek.Forms
             this.btnCancelar = new Button();
             this.btnVoltar = new Button();
 
-            // FORMULARIO PRINCIPAL
             this.Text = "Cadastrar Cliente - Vendas Geek";
             this.Size = new Size(850, 520);
             this.StartPosition = FormStartPosition.CenterScreen;
@@ -62,12 +62,10 @@ namespace SistemaVendaGeek.Forms
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
 
-            // PANEL CENTRAL
             this.pnlCentral.Size = new Size(800, 460);
             this.pnlCentral.Location = new Point(25, 20);
             this.pnlCentral.BackColor = Color.Transparent;
 
-            // TITULO
             this.lblTitulo.Text = "CADASTRAR CLIENTE";
             this.lblTitulo.Font = new Font("Arial", 22, FontStyle.Bold);
             this.lblTitulo.Size = new Size(800, 50);
@@ -75,7 +73,6 @@ namespace SistemaVendaGeek.Forms
             this.lblTitulo.TextAlign = ContentAlignment.MiddleCenter;
             this.lblTitulo.ForeColor = Color.Black;
 
-            // Nome
             this.lblNome.Text = "Nome Completo:";
             this.lblNome.Font = new Font("Arial", 11, FontStyle.Bold);
             this.lblNome.Size = new Size(140, 30);
@@ -86,7 +83,6 @@ namespace SistemaVendaGeek.Forms
             this.txtNome.Location = new Point(190, 80);
             this.txtNome.Font = new Font("Arial", 11);
 
-            // CPF
             this.lblCPF.Text = "CPF:";
             this.lblCPF.Font = new Font("Arial", 11, FontStyle.Bold);
             this.lblCPF.Size = new Size(140, 30);
@@ -98,7 +94,6 @@ namespace SistemaVendaGeek.Forms
             this.txtCPF.Font = new Font("Arial", 11);
             this.txtCPF.MaxLength = 14;
 
-            // RG
             this.lblRG.Text = "RG:";
             this.lblRG.Font = new Font("Arial", 11, FontStyle.Bold);
             this.lblRG.Size = new Size(140, 30);
@@ -109,7 +104,6 @@ namespace SistemaVendaGeek.Forms
             this.txtRG.Location = new Point(560, 130);
             this.txtRG.Font = new Font("Arial", 11);
 
-            // Endereco
             this.lblEndereco.Text = "Endereco:";
             this.lblEndereco.Font = new Font("Arial", 11, FontStyle.Bold);
             this.lblEndereco.Size = new Size(140, 30);
@@ -120,7 +114,6 @@ namespace SistemaVendaGeek.Forms
             this.txtEndereco.Location = new Point(190, 180);
             this.txtEndereco.Font = new Font("Arial", 11);
 
-            // Telefone
             this.lblTelefone.Text = "Telefone:";
             this.lblTelefone.Font = new Font("Arial", 11, FontStyle.Bold);
             this.lblTelefone.Size = new Size(140, 30);
@@ -131,7 +124,6 @@ namespace SistemaVendaGeek.Forms
             this.txtTelefone.Location = new Point(190, 230);
             this.txtTelefone.Font = new Font("Arial", 11);
 
-            // Email
             this.lblEmail.Text = "E-mail:";
             this.lblEmail.Font = new Font("Arial", 11, FontStyle.Bold);
             this.lblEmail.Size = new Size(140, 30);
@@ -142,54 +134,33 @@ namespace SistemaVendaGeek.Forms
             this.txtEmail.Location = new Point(560, 230);
             this.txtEmail.Font = new Font("Arial", 11);
 
-            // BOTOES
-            this.btnSalvar.Text = "SALVAR";
+            this.btnSalvar.Text = "&SALVAR";
             this.btnSalvar.Size = new Size(160, 50);
             this.btnSalvar.Location = new Point(130, 330);
             this.btnSalvar.BackColor = Color.DodgerBlue;
             this.btnSalvar.ForeColor = Color.White;
             this.btnSalvar.Font = new Font("Arial", 12, FontStyle.Bold);
             this.btnSalvar.FlatStyle = FlatStyle.Flat;
-            this.btnSalvar.FlatAppearance.BorderSize = 2;
-            this.btnSalvar.FlatAppearance.BorderColor = Color.DarkBlue;
-            this.btnSalvar.Cursor = Cursors.Hand;
             this.btnSalvar.Click += BtnSalvar_Click;
 
-            this.btnCancelar.Text = "CANCELAR";
+            this.btnCancelar.Text = "&CANCELAR";
             this.btnCancelar.Size = new Size(140, 50);
             this.btnCancelar.Location = new Point(310, 330);
             this.btnCancelar.BackColor = Color.Crimson;
             this.btnCancelar.ForeColor = Color.White;
             this.btnCancelar.Font = new Font("Arial", 12, FontStyle.Bold);
             this.btnCancelar.FlatStyle = FlatStyle.Flat;
-            this.btnCancelar.FlatAppearance.BorderSize = 2;
-            this.btnCancelar.FlatAppearance.BorderColor = Color.DarkRed;
-            this.btnCancelar.Cursor = Cursors.Hand;
             this.btnCancelar.Click += BtnCancelar_Click;
 
-            this.btnVoltar.Text = "VOLTAR";
+            this.btnVoltar.Text = "&VOLTAR";
             this.btnVoltar.Size = new Size(140, 50);
             this.btnVoltar.Location = new Point(470, 330);
             this.btnVoltar.BackColor = Color.LightGray;
             this.btnVoltar.ForeColor = Color.Black;
             this.btnVoltar.Font = new Font("Arial", 12, FontStyle.Bold);
             this.btnVoltar.FlatStyle = FlatStyle.Flat;
-            this.btnVoltar.FlatAppearance.BorderSize = 2;
-            this.btnVoltar.FlatAppearance.BorderColor = Color.Gray;
-            this.btnVoltar.Cursor = Cursors.Hand;
             this.btnVoltar.Click += BtnVoltar_Click;
 
-
-            this.btnSalvar.Text = "&SALVAR";       // Alt+S
-            this.btnCancelar.Text = "&CANCELAR";   // Alt+C
-            this.btnVoltar.Text = "&VOLTAR";       // Alt+V
-
-            this.lblNome.Text = "&Nome Completo:";
-            this.lblCPF.Text = "&CPF:";
-            this.lblRG.Text = "&RG:";
-            this.lblEndereco.Text = "&Endereco:";
-            this.lblTelefone.Text = "&Telefone:";
-            this.lblEmail.Text = "&E-mail:";
             this.pnlCentral.Controls.Add(this.lblTitulo);
             this.pnlCentral.Controls.Add(this.lblNome);
             this.pnlCentral.Controls.Add(this.txtNome);
@@ -208,6 +179,40 @@ namespace SistemaVendaGeek.Forms
             this.pnlCentral.Controls.Add(this.btnVoltar);
 
             this.Controls.Add(this.pnlCentral);
+        }
+
+        private bool ValidarCPF(string cpf)
+        {
+            cpf = new string(cpf.Where(char.IsDigit).ToArray());
+            if (cpf.Length != 11) return false;
+            
+            bool todosIguais = true;
+            for (int i = 1; i < 11; i++)
+            {
+                if (cpf[i] != cpf[0])
+                {
+                    todosIguais = false;
+                    break;
+                }
+            }
+            if (todosIguais) return false;
+            
+            int soma = 0;
+            for (int i = 0; i < 9; i++)
+                soma += (cpf[i] - '0') * (10 - i);
+            
+            int primeiroDigito = 11 - (soma % 11);
+            if (primeiroDigito >= 10) primeiroDigito = 0;
+            if (primeiroDigito != (cpf[9] - '0')) return false;
+            
+            soma = 0;
+            for (int i = 0; i < 10; i++)
+                soma += (cpf[i] - '0') * (11 - i);
+            
+            int segundoDigito = 11 - (soma % 11);
+            if (segundoDigito >= 10) segundoDigito = 0;
+            
+            return segundoDigito == (cpf[10] - '0');
         }
 
         private void MostrarMensagemGrande(string titulo, string mensagem, MessageBoxIcon icone)
@@ -291,6 +296,12 @@ namespace SistemaVendaGeek.Forms
             if (string.IsNullOrWhiteSpace(txtCPF.Text))
             {
                 MostrarMensagemGrande("Atencao", "O campo CPF e obrigatorio.", MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!ValidarCPF(txtCPF.Text))
+            {
+                MostrarMensagemGrande("Atencao", "CPF invalido! Digite um CPF valido.", MessageBoxIcon.Warning);
                 return;
             }
 

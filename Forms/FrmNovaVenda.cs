@@ -94,6 +94,148 @@ namespace SistemaVendaGeek.Forms
             msgForm.ShowDialog();
         }
 
+        // POPUP para escolher parcelas (só aparece se valor total >= 50)
+        private int MostrarPopupParcelas(decimal valorTotal)
+        {
+            // Verifica se o valor mínimo para parcelar é atingido
+            if (valorTotal < 50)
+            {
+                MessageBox.Show(
+                    $"Valor mínimo para parcelamento é R$ 50,00.\n\n" +
+                    $"Valor da compra: R$ {valorTotal:F2}\n\n" +
+                    "Esta compra só pode ser paga à vista.",
+                    "Parcelamento não disponível",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return 0; // Retorna 0 indicando que não pode parcelar
+            }
+
+            Form popupForm = new Form();
+            popupForm.Text = "PARCELAMENTO";
+            popupForm.Size = new Size(450, 320);
+            popupForm.StartPosition = FormStartPosition.CenterParent;
+            popupForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+            popupForm.MaximizeBox = false;
+            popupForm.MinimizeBox = false;
+            popupForm.BackColor = Color.WhiteSmoke;
+
+            Label lblTituloPopup = new Label();
+            lblTituloPopup.Text = "ESCOLHA O NÚMERO DE PARCELAS";
+            lblTituloPopup.Font = new Font("Arial", 14, FontStyle.Bold);
+            lblTituloPopup.Size = new Size(400, 30);
+            lblTituloPopup.Location = new Point(25, 15);
+            lblTituloPopup.TextAlign = ContentAlignment.MiddleCenter;
+
+            Label lblValorTotal = new Label();
+            lblValorTotal.Text = $"Valor total: R$ {valorTotal:F2}";
+            lblValorTotal.Font = new Font("Arial", 12, FontStyle.Bold);
+            lblValorTotal.Size = new Size(400, 25);
+            lblValorTotal.Location = new Point(25, 55);
+            lblValorTotal.TextAlign = ContentAlignment.MiddleCenter;
+            lblValorTotal.ForeColor = Color.DarkBlue;
+
+            Label lblInfo = new Label();
+            lblInfo.Text = "Parcelamento disponível para compras acima de R$ 50,00";
+            lblInfo.Font = new Font("Arial", 10);
+            lblInfo.Size = new Size(400, 20);
+            lblInfo.Location = new Point(25, 85);
+            lblInfo.TextAlign = ContentAlignment.MiddleCenter;
+            lblInfo.ForeColor = Color.Gray;
+
+            Label lblParcelas = new Label();
+            lblParcelas.Text = "Parcelas:";
+            lblParcelas.Font = new Font("Arial", 12, FontStyle.Bold);
+            lblParcelas.Size = new Size(80, 30);
+            lblParcelas.Location = new Point(60, 130);
+            lblParcelas.TextAlign = ContentAlignment.MiddleRight;
+
+            NumericUpDown numParcelasPopup = new NumericUpDown();
+            numParcelasPopup.Size = new Size(100, 35);
+            numParcelasPopup.Location = new Point(150, 130);
+            numParcelasPopup.Font = new Font("Arial", 14);
+            numParcelasPopup.Minimum = 2;  // Mínimo 2 parcelas
+            numParcelasPopup.Maximum = 12;
+            numParcelasPopup.Value = 2;
+            numParcelasPopup.TextAlign = HorizontalAlignment.Center;
+
+            Label lblValorParcela = new Label();
+            decimal valorParcelaInicial = valorTotal / 2;
+            lblValorParcela.Text = $"Valor da parcela: R$ {valorParcelaInicial:F2}";
+            lblValorParcela.Font = new Font("Arial", 11);
+            lblValorParcela.Size = new Size(200, 25);
+            lblValorParcela.Location = new Point(260, 135);
+            lblValorParcela.ForeColor = Color.DarkGreen;
+
+            // Calcula o máximo de parcelas permitido
+            int maxParcelasPermitido = (int)(valorTotal / 50);
+            if (maxParcelasPermitido > 12)
+                maxParcelasPermitido = 12;
+            if (maxParcelasPermitido < 2)
+                maxParcelasPermitido = 2;
+
+            numParcelasPopup.Maximum = maxParcelasPermitido;
+
+            // Atualiza o valor da parcela quando mudar
+            numParcelasPopup.ValueChanged += (s, ev) =>
+            {
+                int parcelas = (int)numParcelasPopup.Value;
+                decimal valorParcela = valorTotal / parcelas;
+                lblValorParcela.Text = $"Valor da parcela: R$ {valorParcela:F2}";
+
+                if (valorParcela < 50)
+                {
+                    lblValorParcela.ForeColor = Color.Red;
+                }
+                else
+                {
+                    lblValorParcela.ForeColor = Color.DarkGreen;
+                }
+            };
+
+            Button btnConfirmar = new Button();
+            btnConfirmar.Text = "CONFIRMAR";
+            btnConfirmar.Size = new Size(120, 45);
+            btnConfirmar.Location = new Point(80, 200);
+            btnConfirmar.BackColor = Color.DodgerBlue;
+            btnConfirmar.ForeColor = Color.White;
+            btnConfirmar.Font = new Font("Arial", 12, FontStyle.Bold);
+            btnConfirmar.FlatStyle = FlatStyle.Flat;
+
+            Button btnCancelarPopup = new Button();
+            btnCancelarPopup.Text = "CANCELAR";
+            btnCancelarPopup.Size = new Size(120, 45);
+            btnCancelarPopup.Location = new Point(220, 200);
+            btnCancelarPopup.BackColor = Color.LightGray;
+            btnCancelarPopup.ForeColor = Color.Black;
+            btnCancelarPopup.Font = new Font("Arial", 12, FontStyle.Bold);
+            btnCancelarPopup.FlatStyle = FlatStyle.Flat;
+
+            popupForm.Controls.Add(lblTituloPopup);
+            popupForm.Controls.Add(lblValorTotal);
+            popupForm.Controls.Add(lblInfo);
+            popupForm.Controls.Add(lblParcelas);
+            popupForm.Controls.Add(numParcelasPopup);
+            popupForm.Controls.Add(lblValorParcela);
+            popupForm.Controls.Add(btnConfirmar);
+            popupForm.Controls.Add(btnCancelarPopup);
+
+            int parcelasResult = 0;
+
+            btnConfirmar.Click += (s, ev) =>
+            {
+                parcelasResult = (int)numParcelasPopup.Value;
+                popupForm.Close();
+            };
+
+            btnCancelarPopup.Click += (s, ev) =>
+            {
+                parcelasResult = 0;
+                popupForm.Close();
+            };
+
+            popupForm.ShowDialog();
+            return parcelasResult;
+        }
         private void InitializeComponent()
         {
             this.pnlCentral = new Panel();
@@ -160,15 +302,13 @@ namespace SistemaVendaGeek.Forms
             this.txtClienteCPF.Location = new Point(95, 35);
             this.txtClienteCPF.Font = new Font("Arial", 12);
 
-            this.btnBuscarCliente.Text = "BUSCAR CLIENTE";
+            this.btnBuscarCliente.Text = "&BUSCAR CLIENTE";
             this.btnBuscarCliente.Size = new Size(150, 38);
             this.btnBuscarCliente.Location = new Point(390, 33);
             this.btnBuscarCliente.BackColor = Color.DodgerBlue;
             this.btnBuscarCliente.ForeColor = Color.White;
             this.btnBuscarCliente.Font = new Font("Arial", 11, FontStyle.Bold);
             this.btnBuscarCliente.FlatStyle = FlatStyle.Flat;
-            this.btnBuscarCliente.FlatAppearance.BorderSize = 2;
-            this.btnBuscarCliente.FlatAppearance.BorderColor = Color.DarkBlue;
             this.btnBuscarCliente.Cursor = Cursors.Hand;
             this.btnBuscarCliente.Click += btnBuscarCliente_Click;
 
@@ -184,13 +324,6 @@ namespace SistemaVendaGeek.Forms
             this.txtClienteNome.ReadOnly = true;
             this.txtClienteNome.BackColor = Color.LightGray;
 
-            this.btnBuscarCliente.Text = "&BUSCAR CLIENTE";
-            this.btnAdicionar.Text = "&ADICIONAR";
-            this.btnRemoverItem.Text = "&REMOVER ITEM";
-            this.btnVoltar.Text = "&VOLTAR";
-            this.btnCancelar.Text = "&CANCELAR VENDA";
-            this.btnFinalizar.Text = "&FINALIZAR VENDA";
-
             this.gbxCliente.Controls.Add(this.lblClienteCPF);
             this.gbxCliente.Controls.Add(this.txtClienteCPF);
             this.gbxCliente.Controls.Add(this.btnBuscarCliente);
@@ -204,40 +337,36 @@ namespace SistemaVendaGeek.Forms
             this.gbxProduto.Location = new Point(20, 180);
             this.gbxProduto.Padding = new Padding(10);
 
-            // Codigo de Barras
             this.lblCodigoBarras.Text = "CODIGO DE BARRAS:";
             this.lblCodigoBarras.Font = new Font("Arial", 12, FontStyle.Bold);
-            this.lblCodigoBarras.Size = new Size(265, 35);
-            this.lblCodigoBarras.Location = new Point(20, 20);
+            this.lblCodigoBarras.Size = new Size(200, 35);
+            this.lblCodigoBarras.Location = new Point(20, 25);
             this.lblCodigoBarras.TextAlign = ContentAlignment.MiddleLeft;
 
             this.txtCodigoBarras.Size = new Size(400, 35);
-            this.txtCodigoBarras.Location = new Point(290, 20);
+            this.txtCodigoBarras.Location = new Point(230, 25);
             this.txtCodigoBarras.Font = new Font("Arial", 12);
 
-            // Quantidade e Botao Adicionar
             this.lblQuantidade.Text = "QUANTIDADE:";
             this.lblQuantidade.Font = new Font("Arial", 12, FontStyle.Bold);
-            this.lblQuantidade.Size = new Size(150, 35);
+            this.lblQuantidade.Size = new Size(130, 35);
             this.lblQuantidade.Location = new Point(20, 65);
             this.lblQuantidade.TextAlign = ContentAlignment.MiddleLeft;
 
             this.numQuantidade.Size = new Size(100, 35);
-            this.numQuantidade.Location = new Point(175, 65);
+            this.numQuantidade.Location = new Point(160, 65);
             this.numQuantidade.Font = new Font("Arial", 12);
             this.numQuantidade.Minimum = 1;
             this.numQuantidade.Maximum = 99;
             this.numQuantidade.Value = 1;
 
-            this.btnAdicionar.Text = "ADICIONAR";
+            this.btnAdicionar.Text = "&ADICIONAR";
             this.btnAdicionar.Size = new Size(140, 42);
             this.btnAdicionar.Location = new Point(280, 62);
             this.btnAdicionar.BackColor = Color.LimeGreen;
             this.btnAdicionar.ForeColor = Color.White;
             this.btnAdicionar.Font = new Font("Arial", 11, FontStyle.Bold);
             this.btnAdicionar.FlatStyle = FlatStyle.Flat;
-            this.btnAdicionar.FlatAppearance.BorderSize = 2;
-            this.btnAdicionar.FlatAppearance.BorderColor = Color.DarkGreen;
             this.btnAdicionar.Cursor = Cursors.Hand;
             this.btnAdicionar.Click += btnAdicionar_Click;
 
@@ -276,29 +405,25 @@ namespace SistemaVendaGeek.Forms
             this.dgvCarrinho.Columns[4].Name = "Subtotal";
             this.dgvCarrinho.Columns[4].HeaderText = "SUBTOTAL";
 
-            // Botao Remover Item
-            this.btnRemoverItem.Text = "REMOVER ITEM";
+            this.btnRemoverItem.Text = "&REMOVER ITEM";
             this.btnRemoverItem.Size = new Size(150, 40);
             this.btnRemoverItem.Location = new Point(15, 240);
             this.btnRemoverItem.BackColor = Color.Crimson;
             this.btnRemoverItem.ForeColor = Color.White;
             this.btnRemoverItem.Font = new Font("Arial", 11, FontStyle.Bold);
             this.btnRemoverItem.FlatStyle = FlatStyle.Flat;
-            this.btnRemoverItem.FlatAppearance.BorderSize = 2;
-            this.btnRemoverItem.FlatAppearance.BorderColor = Color.DarkRed;
             this.btnRemoverItem.Cursor = Cursors.Hand;
             this.btnRemoverItem.Click += btnRemoverItem_Click;
 
-            // TOTAL DA COMPRA
             this.lblTotal.Text = "TOTAL DA COMPRA:";
             this.lblTotal.Font = new Font("Arial", 16, FontStyle.Bold);
-            this.lblTotal.Size = new Size(290, 40);
-            this.lblTotal.Location = new Point(400, 240);
+            this.lblTotal.Size = new Size(250, 40);
+            this.lblTotal.Location = new Point(450, 240);
             this.lblTotal.TextAlign = ContentAlignment.MiddleLeft;
             this.lblTotal.ForeColor = Color.DarkSlateBlue;
 
             this.txtTotal.Size = new Size(200, 40);
-            this.txtTotal.Location = new Point(695, 240);
+            this.txtTotal.Location = new Point(710, 240);
             this.txtTotal.Font = new Font("Arial", 16, FontStyle.Bold);
             this.txtTotal.BackColor = Color.LightYellow;
             this.txtTotal.ReadOnly = true;
@@ -313,58 +438,50 @@ namespace SistemaVendaGeek.Forms
             // GROUPBOX FINALIZACAO
             this.gbxFinalizacao.Text = "FINALIZACAO DA VENDA";
             this.gbxFinalizacao.Font = new Font("Arial", 12, FontStyle.Bold);
-            this.gbxFinalizacao.Size = new Size(955, 110);
+            this.gbxFinalizacao.Size = new Size(950, 110);
             this.gbxFinalizacao.Location = new Point(20, 620);
             this.gbxFinalizacao.Padding = new Padding(10);
 
-            // FORMA DE PAGAMENTO - LABEL ACIMA DO COMBOBOX
             this.lblFormaPagamento.Text = "FORMA DE PAGAMENTO:";
             this.lblFormaPagamento.Font = new Font("Arial", 12, FontStyle.Bold);
-            this.lblFormaPagamento.Size = new Size(265, 30);
+            this.lblFormaPagamento.Size = new Size(200, 30);
             this.lblFormaPagamento.Location = new Point(20, 20);
             this.lblFormaPagamento.TextAlign = ContentAlignment.MiddleLeft;
 
-            this.cmbFormaPagamento.Size = new Size(220, 38);
+            this.cmbFormaPagamento.Size = new Size(200, 38);
             this.cmbFormaPagamento.Location = new Point(20, 55);
             this.cmbFormaPagamento.Font = new Font("Arial", 11);
             this.cmbFormaPagamento.DropDownStyle = ComboBoxStyle.DropDownList;
             this.cmbFormaPagamento.Items.AddRange(new string[] { "Dinheiro", "Cartao de Credito", "Cartao de Debito", "PIX" });
             this.cmbFormaPagamento.SelectedIndex = 0;
 
-            // BOTOES
-            this.btnVoltar.Text = "VOLTAR";
-            this.btnVoltar.Size = new Size(130, 48);
-            this.btnVoltar.Location = new Point(350, 45);
+            this.btnVoltar.Text = "&VOLTAR";
+            this.btnVoltar.Size = new Size(140, 50);
+            this.btnVoltar.Location = new Point(280, 45);
             this.btnVoltar.BackColor = Color.LightGray;
             this.btnVoltar.ForeColor = Color.Black;
-            this.btnVoltar.Font = new Font("Arial", 11, FontStyle.Bold);
+            this.btnVoltar.Font = new Font("Arial", 12, FontStyle.Bold);
             this.btnVoltar.FlatStyle = FlatStyle.Flat;
-            this.btnVoltar.FlatAppearance.BorderSize = 2;
-            this.btnVoltar.FlatAppearance.BorderColor = Color.Gray;
             this.btnVoltar.Cursor = Cursors.Hand;
             this.btnVoltar.Click += btnVoltar_Click;
 
-            this.btnCancelar.Text = "CANCELAR VENDA";
-            this.btnCancelar.Size = new Size(150, 48);
-            this.btnCancelar.Location = new Point(500, 45);
+            this.btnCancelar.Text = "&CANCELAR VENDA";
+            this.btnCancelar.Size = new Size(160, 50);
+            this.btnCancelar.Location = new Point(440, 45);
             this.btnCancelar.BackColor = Color.Crimson;
             this.btnCancelar.ForeColor = Color.White;
-            this.btnCancelar.Font = new Font("Arial", 11, FontStyle.Bold);
+            this.btnCancelar.Font = new Font("Arial", 12, FontStyle.Bold);
             this.btnCancelar.FlatStyle = FlatStyle.Flat;
-            this.btnCancelar.FlatAppearance.BorderSize = 2;
-            this.btnCancelar.FlatAppearance.BorderColor = Color.DarkRed;
             this.btnCancelar.Cursor = Cursors.Hand;
             this.btnCancelar.Click += btnCancelar_Click;
 
-            this.btnFinalizar.Text = "FINALIZAR VENDA";
+            this.btnFinalizar.Text = "&FINALIZAR VENDA";
             this.btnFinalizar.Size = new Size(180, 50);
-            this.btnFinalizar.Location = new Point(670, 45);
+            this.btnFinalizar.Location = new Point(620, 45);
             this.btnFinalizar.BackColor = Color.DodgerBlue;
             this.btnFinalizar.ForeColor = Color.White;
             this.btnFinalizar.Font = new Font("Arial", 12, FontStyle.Bold);
             this.btnFinalizar.FlatStyle = FlatStyle.Flat;
-            this.btnFinalizar.FlatAppearance.BorderSize = 2;
-            this.btnFinalizar.FlatAppearance.BorderColor = Color.DarkBlue;
             this.btnFinalizar.Cursor = Cursors.Hand;
             this.btnFinalizar.Click += btnFinalizar_Click;
 
@@ -502,7 +619,6 @@ namespace SistemaVendaGeek.Forms
             }
             txtTotal.Text = total.ToString("F2");
 
-            // CRIA UM CODIGO DE VENDA PARA O CARRINHO ATUAL (se ainda não existir)
             if (string.IsNullOrEmpty(_codigoVendaAtual))
             {
                 _codigoVendaAtual = Guid.NewGuid().ToString();
@@ -554,6 +670,22 @@ namespace SistemaVendaGeek.Forms
             }
 
             string formaPagamento = cmbFormaPagamento.SelectedItem?.ToString() ?? "Dinheiro";
+            
+            decimal total = decimal.Parse(txtTotal.Text);
+            int parcelas = 1;
+            string infoPagamento = formaPagamento;
+
+            // Se for Cartão de Crédito
+            if (formaPagamento == "Cartao de Credito")
+            {
+                parcelas = MostrarPopupParcelas(total);
+                // Usuário cancelou ou valor mínimo não atingido
+                if (parcelas == 0) 
+                {
+                    return;
+                }
+                infoPagamento = $"{formaPagamento} em {parcelas}x";
+            }
 
             if (dgvCarrinho.Rows.Count == 0 || dgvCarrinho.Rows[0].Cells["CodigoBarras"].Value == null)
             {
@@ -563,7 +695,6 @@ namespace SistemaVendaGeek.Forms
 
             string codigoBarras = dgvCarrinho.Rows[0].Cells["CodigoBarras"].Value.ToString();
             int quantidade = Convert.ToInt32(dgvCarrinho.Rows[0].Cells["Quantidade"].Value);
-            decimal total = decimal.Parse(txtTotal.Text);
 
             string codigoVenda = VendaService.RegistrarVenda(codigoBarras, quantidade, txtClienteCPF.Text.Trim());
 
@@ -575,7 +706,7 @@ namespace SistemaVendaGeek.Forms
             if (!string.IsNullOrEmpty(codigoVenda))
             {
                 VendaService.AtualizarStatusVenda(codigoVenda, "Finalizada");
-                SistemaFinanceiroService.RegistrarVendaFinanceiro(codigoVenda, total, formaPagamento);
+                SistemaFinanceiroService.RegistrarVendaFinanceiro(codigoVenda, total, infoPagamento);
 
                 try
                 {
@@ -583,7 +714,6 @@ namespace SistemaVendaGeek.Forms
                 }
                 catch (Exception ex)
                 {
-                    // Apenas loga o erro, nao impede a finalizacao da venda
                     System.Diagnostics.Debug.WriteLine("Erro no backup: " + ex.Message);
                 }
 
@@ -612,7 +742,7 @@ namespace SistemaVendaGeek.Forms
                         detalhesProdutos,
                         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
                         "TOTAL: R$ " + total.ToString("F2"),
-                        "PAGAMENTO: " + formaPagamento,
+                        "PAGAMENTO: " + infoPagamento,
                         "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nRegistro enviado ao sistema financeiro."));
 
                 dgvCarrinho.Rows.Clear();
@@ -625,6 +755,7 @@ namespace SistemaVendaGeek.Forms
                 txtClienteCPF.Focus();
             }
         }
+
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             if (dgvCarrinho.Rows.Count == 0)
@@ -633,9 +764,6 @@ namespace SistemaVendaGeek.Forms
                 return;
             }
 
-            // VERIFICA SE PRECISA DE AUTORIZACAO
-            // Apenas ATENDENTE precisa de autorizacao do supervisor
-            // SUPERVISOR pode cancelar diretamente
             if (_perfilUsuario == "Atendente")
             {
                 Form credForm = new Form();
@@ -712,7 +840,6 @@ namespace SistemaVendaGeek.Forms
                 };
 
                 btnCancelarCred.Click += (s, ev) => credForm.Close();
-
                 credForm.ShowDialog();
 
                 if (!credenciaisValidas)
@@ -720,17 +847,9 @@ namespace SistemaVendaGeek.Forms
                     return;
                 }
             }
-            // Se for Supervisor, continua direto sem pedir autenticação
 
-            // ================================================
-            // EXECUTA O CANCELAMENTO DA VENDA
-            // ================================================
-
-            // Se o carrinho tem itens mas não tem código de venda no banco,
-            // apenas limpamos o carrinho sem chamar o serviço de cancelamento
             if (string.IsNullOrEmpty(_codigoVendaAtual))
             {
-                // Carrinho com itens mas venda não registrada no banco - apenas limpar
                 dgvCarrinho.Rows.Clear();
                 txtTotal.Text = "0,00";
                 txtClienteCPF.Text = "";
@@ -744,7 +863,6 @@ namespace SistemaVendaGeek.Forms
                 return;
             }
 
-            // Se tem código de venda, tenta cancelar no banco
             bool cancelado = VendaService.CancelarVenda(_codigoVendaAtual);
 
             if (cancelado)
@@ -760,12 +878,11 @@ namespace SistemaVendaGeek.Forms
                 _codigoVendaAtual = null;
 
                 MostrarMensagemGrande("VENDA CANCELADA",
-                    $"Codigo da venda: {_codigoVendaAtual?.Substring(0, 8) ?? "N/A"}\n\nCancelamento comunicado ao sistema financeiro.",
+                    "Venda cancelada com sucesso!",
                     MessageBoxIcon.Information);
             }
             else
             {
-                // Se não conseguiu cancelar no banco, pelo menos limpa o carrinho local
                 dgvCarrinho.Rows.Clear();
                 txtTotal.Text = "0,00";
                 txtClienteCPF.Text = "";
@@ -779,6 +896,7 @@ namespace SistemaVendaGeek.Forms
                     MessageBoxIcon.Information);
             }
         }
+
         private void btnVoltar_Click(object sender, EventArgs e)
         {
             this.Close();
