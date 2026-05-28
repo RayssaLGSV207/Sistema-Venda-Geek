@@ -1,16 +1,18 @@
 -- =============================================
 -- BANCO DE DADOS - SISTEMA VENDA GEEK (SQLite)
 -- =============================================
+-- VERSAO ATUALIZADA COM TODAS AS IMPLEMENTACOES
+-- =============================================
 
 -- 1. TABELA USUARIO
-CREATE TABLE Usuario (
+CREATE TABLE IF NOT EXISTS Usuario (
     Login TEXT PRIMARY KEY,
     Senha TEXT NOT NULL,
     Perfil TEXT NOT NULL
 );
 
 -- 2. TABELA PRODUTO
-CREATE TABLE Produto (
+CREATE TABLE IF NOT EXISTS Produto (
     CodigoBarras TEXT PRIMARY KEY,
     Nome TEXT NOT NULL,
     Categoria TEXT,
@@ -23,7 +25,7 @@ CREATE TABLE Produto (
 );
 
 -- 3. TABELA CLIENTE
-CREATE TABLE Cliente (
+CREATE TABLE IF NOT EXISTS Cliente (
     Id INTEGER PRIMARY KEY AUTOINCREMENT,
     Nome TEXT NOT NULL,
     CPF TEXT UNIQUE,
@@ -35,34 +37,49 @@ CREATE TABLE Cliente (
 );
 
 -- 4. TABELA VENDA
-CREATE TABLE Venda (
+CREATE TABLE IF NOT EXISTS Venda (
     CodigoVenda TEXT PRIMARY KEY,
     DataVenda DATETIME DEFAULT CURRENT_TIMESTAMP,
     ValorTotal DECIMAL(10,2) DEFAULT 0,
     Status TEXT DEFAULT 'Pendente',
     FormaPagamento TEXT,
-    ClienteCPF TEXT
+    ClienteCPF TEXT,
+    FOREIGN KEY (ClienteCPF) REFERENCES Cliente(CPF)
 );
 
 -- 5. TABELA ITEM_VENDA
-CREATE TABLE ItemVenda (
+CREATE TABLE IF NOT EXISTS ItemVenda (
     Id INTEGER PRIMARY KEY AUTOINCREMENT,
     CodigoVenda TEXT NOT NULL,
     CodigoBarras TEXT NOT NULL,
     Quantidade INTEGER NOT NULL,
     PrecoUnitario DECIMAL(10,2) NOT NULL,
-    FOREIGN KEY (CodigoVenda) REFERENCES Venda(CodigoVenda),
+    FOREIGN KEY (CodigoVenda) REFERENCES Venda(CodigoVenda) ON DELETE CASCADE,
     FOREIGN KEY (CodigoBarras) REFERENCES Produto(CodigoBarras)
 );
 
--- USUARIOS DE TESTE
+-- =============================================
+-- INDICES PARA OTIMIZACAO DE CONSULTAS
+-- =============================================
+
+CREATE INDEX IF NOT EXISTS idx_venda_data ON Venda(DataVenda);
+CREATE INDEX IF NOT EXISTS idx_venda_status ON Venda(Status);
+CREATE INDEX IF NOT EXISTS idx_produto_nome ON Produto(Nome);
+CREATE INDEX IF NOT EXISTS idx_produto_categoria ON Produto(Categoria);
+CREATE INDEX IF NOT EXISTS idx_cliente_nome ON Cliente(Nome);
+
+-- =============================================
+-- DADOS DE TESTE
+-- =============================================
+
+-- USUARIOS DE TESTE (3 niveis de acesso)
 INSERT OR IGNORE INTO Usuario (Login, Senha, Perfil) VALUES
 ('atendente', '123', 'Atendente'),
 ('supervisor', '123', 'Supervisor'),
 ('estoquista', '123', 'Estoquista');
 
--- 30 PRODUTOS GEEK (COM CODIGOS FACIL)
--- === JOGOS (15 itens) ===
+-- PRODUTOS (35 PRODUTOS)
+-- JOGOS (10 itens)
 INSERT OR IGNORE INTO Produto (CodigoBarras, Nome, Categoria, Fabricante, Valor, QuantidadeEstoque, IsRaro, Plataforma, PrazoGarantia) VALUES
 ('JOGO001', 'The Legend of Zelda: Tears of the Kingdom', 'Jogo', 'Nintendo', 349.90, 25, 0, 'Switch', 12),
 ('JOGO002', 'God of War Ragnarok', 'Jogo', 'Sony', 299.90, 30, 0, 'PS5', 12),
@@ -73,16 +90,18 @@ INSERT OR IGNORE INTO Produto (CodigoBarras, Nome, Categoria, Fabricante, Valor,
 ('JOGO007', 'Final Fantasy XVI', 'Jogo', 'Square Enix', 279.90, 12, 0, 'PS5', 12),
 ('JOGO008', 'Starfield', 'Jogo', 'Bethesda', 299.90, 10, 0, 'Xbox/PC', 12),
 ('JOGO009', 'Street Fighter 6', 'Jogo', 'Capcom', 249.90, 20, 0, 'Multiplataforma', 12),
-('JOGO010', 'Resident Evil 4 Remake', 'Jogo', 'Capcom', 199.90, 25, 0, 'Multiplataforma', 12),
+('JOGO010', 'Resident Evil 4 Remake', 'Jogo', 'Capcom', 199.90, 25, 0, 'Multiplataforma', 12);
 
--- === ITENS RAROS (5 itens - estoque limitado) ===
+-- ITENS RAROS (5 itens)
+INSERT OR IGNORE INTO Produto (CodigoBarras, Nome, Categoria, Fabricante, Valor, QuantidadeEstoque, IsRaro, Plataforma, PrazoGarantia) VALUES
 ('RARE001', 'Zelda Ocarina of Time - Edicao Colecionador', 'Jogo', 'Nintendo', 899.90, 2, 1, 'N64/Switch', 0),
 ('RARE002', 'Super Mario 64 - Lacrado', 'Jogo', 'Nintendo', 1499.90, 1, 1, 'N64', 0),
 ('RARE003', 'Pokemon Red/Blue - Primeira Edicao', 'Jogo', 'Nintendo', 2499.90, 1, 1, 'Game Boy', 0),
 ('RARE004', 'Funko Pop Chase - Edicao Limitada', 'Produto Geek', 'Funko', 599.90, 3, 1, 'Colecionador', 0),
-('RARE005', 'Action Figure Spider-Man - Autografada', 'Produto Geek', 'Hasbro', 799.90, 2, 1, 'Colecionador', 0),
+('RARE005', 'Action Figure Spider-Man - Autografada', 'Produto Geek', 'Hasbro', 799.90, 2, 1, 'Colecionador', 0);
 
--- === ACESSORIOS (10 itens) ===
+-- ACESSORIOS (10 itens)
+INSERT OR IGNORE INTO Produto (CodigoBarras, Nome, Categoria, Fabricante, Valor, QuantidadeEstoque, IsRaro, Plataforma, PrazoGarantia) VALUES
 ('ACC001', 'Controle Sem Fio DualSense', 'Acessorio', 'Sony', 449.90, 15, 0, 'PS5', 6),
 ('ACC002', 'Controle Pro Switch', 'Acessorio', 'Nintendo', 399.90, 12, 0, 'Switch', 6),
 ('ACC003', 'Headset Gamer HyperX', 'Acessorio', 'HyperX', 299.90, 20, 0, 'Multiplataforma', 6),
@@ -94,15 +113,17 @@ INSERT OR IGNORE INTO Produto (CodigoBarras, Nome, Categoria, Fabricante, Valor,
 ('ACC009', 'Fone de Ouvido Gamer', 'Acessorio', 'Razer', 329.90, 15, 0, 'Multiplataforma', 6),
 ('ACC010', 'Mousepad RGB', 'Acessorio', 'Redragon', 89.90, 25, 0, 'PC', 3);
 
--- === PRODUTOS GEEK (5 itens) ===
+-- PRODUTOS GEEK (5 itens)
+INSERT OR IGNORE INTO Produto (CodigoBarras, Nome, Categoria, Fabricante, Valor, QuantidadeEstoque, IsRaro, Plataforma, PrazoGarantia) VALUES
 ('GEEK001', 'Caneca Stormtropper', 'Produto Geek', 'Star Wars', 49.90, 50, 0, 'N/A', 3),
 ('GEEK002', 'Camiseta Gamer - I Love Games', 'Produto Geek', 'Geek Store', 79.90, 40, 0, 'N/A', 3),
 ('GEEK003', 'Capa para Notebook Gamer', 'Produto Geek', 'Razer', 129.90, 15, 0, 'N/A', 6),
 ('GEEK004', 'Chaveiro LED Mario Bros', 'Produto Geek', 'Nintendo', 19.90, 100, 0, 'N/A', 3),
-('GEEK005', 'Pelucia Pikachu 30cm', 'Produto Geek', 'Pokemon', 89.90, 25, 0, 'N/A', 3)";
+('GEEK005', 'Pelucia Pikachu 30cm', 'Produto Geek', 'Pokemon', 89.90, 25, 0, 'N/A', 3);
 
-
--- 20 CLIENTES CADASTRADOS
+-- =============================================
+-- CLIENTES (20 CLIENTES DISTRIBUÍDOS PELO BRASIL)
+-- =============================================
 INSERT OR IGNORE INTO Cliente (Nome, CPF, RG, DataCadastro, Endereco, Telefone, Email) VALUES
 ('Joao Silva', '11122233344', 'MG11122233', date('now'), 'Rua das Flores, 100 - Centro, Sao Paulo/SP', '(11) 91234-5678', 'joao.silva@email.com'),
 ('Maria Oliveira', '22233344455', 'SP22233344', date('now'), 'Av. Paulista, 1000 - Bela Vista, Sao Paulo/SP', '(11) 92345-6789', 'maria.oliveira@email.com'),
@@ -125,10 +146,12 @@ INSERT OR IGNORE INTO Cliente (Nome, CPF, RG, DataCadastro, Endereco, Telefone, 
 ('Thiago Araujo', '99911133355', 'PB99911133', date('now'), 'Rua Diogo Velho, 200 - Joao Pessoa/PB', '(83) 99012-3456', 'thiago.araujo@email.com'),
 ('Renata Carvalho', '00022244466', 'SE00022244', date('now'), 'Rua Sao Cristovao, 100 - Aracaju/SE', '(79) 90123-4567', 'renata.carvalho@email.com');
 
-    
--- RELATORIOS
--- LISTAR TODOS OS PRODUTOS (30 itens)
-SELECT '=== LISTA DE PRODUTOS (30 ITENS) ===' as '';
+-- =============================================
+-- CONSULTAS PARA RELATORIOS
+-- =============================================
+
+-- LISTAR TODOS OS PRODUTOS (35 itens)
+SELECT '=== LISTA DE PRODUTOS (35 ITENS) ===' as '';
 SELECT 
     CodigoBarras as 'CODIGO',
     Nome as 'PRODUTO',
@@ -139,9 +162,13 @@ SELECT
 FROM Produto 
 ORDER BY Categoria, Nome;
 
--- LISTAR PRODUTOS RAROS
+-- LISTAR APENAS PRODUTOS RAROS
 SELECT '=== PRODUTOS RAROS ===' as '';
-SELECT CodigoBarras, Nome, 'R$ ' || printf('%.2f', Valor) as PRECO, QuantidadeEstoque as ESTOQUE
+SELECT 
+    CodigoBarras as 'CODIGO',
+    Nome as 'PRODUTO', 
+    'R$ ' || printf('%.2f', Valor) as 'PRECO', 
+    QuantidadeEstoque as 'ESTOQUE'
 FROM Produto 
 WHERE IsRaro = 1;
 
@@ -156,11 +183,31 @@ SELECT
 FROM Cliente 
 ORDER BY Id;
 
--- RESUMO DO ESTOQUE
-SELECT '=== RESUMO DO ESTOQUE ===' as '';
+-- RESUMO DO ESTOQUE POR CATEGORIA
+SELECT '=== RESUMO DO ESTOQUE POR CATEGORIA ===' as '';
 SELECT 
     Categoria,
     COUNT(*) as 'TOTAL PRODUTOS',
-    SUM(QuantidadeEstoque) as 'TOTAL UNIDADES'
+    SUM(QuantidadeEstoque) as 'TOTAL UNIDADES',
+    SUM(Valor * QuantidadeEstoque) as 'VALOR TOTAL ESTOQUE'
 FROM Produto 
 GROUP BY Categoria;
+
+-- RESUMO DE VENDAS (se houver vendas registradas)
+SELECT '=== RESUMO DE VENDAS ===' as '';
+SELECT 
+    Status,
+    COUNT(*) as 'QUANTIDADE',
+    SUM(ValorTotal) as 'VALOR TOTAL'
+FROM Venda 
+GROUP BY Status;
+
+-- PRODUTOS COM ESTOQUE BAIXO (menos de 5 unidades)
+SELECT '=== PRODUTOS COM ESTOQUE BAIXO ===' as '';
+SELECT 
+    CodigoBarras as 'CODIGO',
+    Nome as 'PRODUTO',
+    QuantidadeEstoque as 'ESTOQUE ATUAL'
+FROM Produto 
+WHERE QuantidadeEstoque < 5 
+ORDER BY QuantidadeEstoque ASC;
