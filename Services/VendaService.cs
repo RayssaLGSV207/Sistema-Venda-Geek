@@ -7,7 +7,13 @@ namespace SistemaVendaGeek.Services
 {
     public class VendaService
     {
-        // Registra uma nova venda no banco de dados.
+        /// <summary>
+        /// Registra uma nova venda no sistema, atualiza o estoque e retorna o codigo da venda
+        /// </summary>
+        /// <param name="codigoBarras">Codigo de barras do produto vendido</param>
+        /// <param name="quantidade">Quantidade vendida do produto</param>
+        /// <param name="clienteCPF">CPF do cliente (opcional)</param>
+        /// <returns>Codigo da venda gerado ou null se houve erro</returns>
         public static string RegistrarVenda(string codigoBarras, int quantidade, string? clienteCPF = null)
         {
             try
@@ -31,14 +37,14 @@ namespace SistemaVendaGeek.Services
 
                                 if (isRaro && estoque < quantidade)
                                 {
-                                    MessageBox.Show($"Item raro '{nome}' não pode ser recomprado. Estoque insuficiente.",
+                                    MessageBox.Show($"Item raro '{nome}' nao pode ser recomprado. Estoque insuficiente.",
                                         "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     return null;
                                 }
 
                                 if (estoque < quantidade)
                                 {
-                                    MessageBox.Show($"Estoque insuficiente para o produto '{nome}'. Disponível: {estoque}",
+                                    MessageBox.Show($"Estoque insuficiente para o produto '{nome}'. Disponivel: {estoque}",
                                         "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     return null;
                                 }
@@ -77,13 +83,13 @@ namespace SistemaVendaGeek.Services
                                     cmdEstoque.ExecuteNonQuery();
                                 }
 
-                                MessageBox.Show($"Venda registrada com sucesso!\nCódigo: {codigoVenda.Substring(0, 8)}",
+                                MessageBox.Show($"Venda registrada com sucesso!\nCodigo: {codigoVenda.Substring(0, 8)}",
                                     "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 return codigoVenda;
                             }
                             else
                             {
-                                MessageBox.Show("Produto não encontrado. Verifique o código de barras.", "Erro",
+                                MessageBox.Show("Produto nao encontrado. Verifique o codigo de barras.", "Erro",
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 return null;
                             }
@@ -99,12 +105,16 @@ namespace SistemaVendaGeek.Services
             }
         }
 
-        // Cancela uma venda (para supervisor já logado - não pede credenciais)
+        /// <summary>
+        /// Cancela uma venda existente (para supervisor ja autenticado)
+        /// </summary>
+        /// <param name="codigoVenda">Codigo da venda a ser cancelada</param>
+        /// <returns>True se o cancelamento foi bem sucedido, False caso contrario</returns>
         public static bool CancelarVenda(string codigoVenda)
         {
             if (!AuthService.IsSupervisor())
             {
-                MessageBox.Show("Apenas supervisor pode cancelar vendas.", "Permissão Negada",
+                MessageBox.Show("Apenas supervisor pode cancelar vendas.", "Permissao Negada",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
@@ -122,7 +132,7 @@ namespace SistemaVendaGeek.Services
                     }
                 }
 
-                MessageBox.Show($"Venda cancelada com sucesso!", "Cancelamento",
+                MessageBox.Show("Venda cancelada com sucesso!", "Cancelamento",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return true;
             }
@@ -134,13 +144,18 @@ namespace SistemaVendaGeek.Services
             }
         }
 
-        // Cancela uma venda (com validação de credenciais de supervisor)
+        /// <summary>
+        /// Cancela uma venda com validacao de credenciais de supervisor
+        /// </summary>
+        /// <param name="codigoVenda">Codigo da venda a ser cancelada</param>
+        /// <param name="supervisorLogin">Login do supervisor autorizador</param>
+        /// <param name="supervisorSenha">Senha do supervisor autorizador</param>
+        /// <returns>True se o cancelamento foi bem sucedido, False caso contrario</returns>
         public static bool CancelarVenda(string codigoVenda, string supervisorLogin, string supervisorSenha)
         {
-            // Só continua se as credenciais forem de supervisor
             if (!AuthService.ValidarCredenciaisSupervisor(supervisorLogin, supervisorSenha))
             {
-                MessageBox.Show("Apenas supervisor pode cancelar vendas.", "Permissão Negada",
+                MessageBox.Show("Apenas supervisor pode cancelar vendas.", "Permissao Negada",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
@@ -158,7 +173,7 @@ namespace SistemaVendaGeek.Services
                     }
                 }
 
-                MessageBox.Show($"Venda cancelada com sucesso!", "Cancelamento",
+                MessageBox.Show("Venda cancelada com sucesso!", "Cancelamento",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return true;
             }
@@ -170,7 +185,12 @@ namespace SistemaVendaGeek.Services
             }
         }
 
-        // Atualiza o status da venda
+        /// <summary>
+        /// Atualiza o status de uma venda existente
+        /// </summary>
+        /// <param name="codigoVenda">Codigo da venda a ser atualizada</param>
+        /// <param name="novoStatus">Novo status da venda (Ex: Finalizada, Cancelada, Pendente)</param>
+        /// <returns>True se a atualizacao foi bem sucedida, False caso contrario</returns>
         public static bool AtualizarStatusVenda(string codigoVenda, string novoStatus)
         {
             try

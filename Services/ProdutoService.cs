@@ -8,7 +8,11 @@ namespace SistemaVendaGeek.Services
 {
     public class ProdutoService
     {
-        // Busca o preço de um produto pelo código de barras.
+        /// <summary>
+        /// Consulta o preco de um produto pelo codigo de barras
+        /// </summary>
+        /// <param name="codigoBarras">Codigo de barras do produto</param>
+        /// <returns>Preco do produto ou zero se nao encontrado</returns>
         public static decimal ConsultarPreco(string codigoBarras)
         {
             try
@@ -28,7 +32,7 @@ namespace SistemaVendaGeek.Services
                             }
                             else
                             {
-                                MessageBox.Show("Produto não encontrado.", "Erro",
+                                MessageBox.Show("Produto nao encontrado.", "Erro",
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 return 0;
                             }
@@ -38,24 +42,36 @@ namespace SistemaVendaGeek.Services
             }
             catch (Exception erro)
             {
-                MessageBox.Show("Erro ao consultar preço: " + erro.Message, "Erro",
+                MessageBox.Show("Erro ao consultar preco: " + erro.Message, "Erro",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return 0;
             }
         }
 
-        // Cadastra um novo produto no banco. Apenas Estoquista pode fazer isso.
+        /// <summary>
+        /// Cadastra um novo produto no sistema
+        /// </summary>
+        /// <param name="codigoBarras">Codigo de barras do produto</param>
+        /// <param name="nome">Nome do produto</param>
+        /// <param name="categoria">Categoria do produto (Jogo, Acessorio, Produto Geek)</param>
+        /// <param name="fabricante">Fabricante do produto</param>
+        /// <param name="quantidade">Quantidade inicial em estoque</param>
+        /// <param name="valor">Valor do produto</param>
+        /// <param name="isRaro">Indica se o produto e raro</param>
+        /// <param name="plataforma">Plataforma do produto</param>
+        /// <param name="garantiaMeses">Prazo de garantia em meses</param>
+        /// <param name="perfilUsuario">Perfil do usuario que esta cadastrando</param>
+        /// <returns>True se o cadastro foi bem sucedido, False caso contrario</returns>
         public static bool CadastrarProduto(
             string codigoBarras, string nome, string categoria,
             string fabricante, int quantidade, decimal valor,
             bool isRaro, string plataforma, int garantiaMeses,
             string perfilUsuario)
         {
-            // Verifica se quem está tentando cadastrar é Estoquista
             if (perfilUsuario != "Estoquista" && perfilUsuario != "Supervisor")
             {
                 MessageBox.Show("Apenas o estoquista ou supervisor pode cadastrar produtos.",
-                    "Permissão Negada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    "Permissao Negada", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -93,7 +109,7 @@ namespace SistemaVendaGeek.Services
             {
                 if (erro.Message.Contains("UNIQUE"))
                 {
-                    MessageBox.Show("Código de barras já cadastrado.", "Erro",
+                    MessageBox.Show("Codigo de barras ja cadastrado.", "Erro",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
@@ -111,7 +127,11 @@ namespace SistemaVendaGeek.Services
             }
         }
 
-        // Busca todas as informações de um produto pelo código de barras.
+        /// <summary>
+        /// Busca todas as informacoes de um produto pelo codigo de barras
+        /// </summary>
+        /// <param name="codigoBarras">Codigo de barras do produto</param>
+        /// <returns>Objeto ProdutoInfo com dados do produto ou null se nao encontrado</returns>
         public static ProdutoInfo BuscarProduto(string codigoBarras)
         {
             try
@@ -152,7 +172,13 @@ namespace SistemaVendaGeek.Services
             return null;
         }
 
-        // Aumenta ou diminui o estoque de um produto.
+        /// <summary>
+        /// Atualiza a quantidade em estoque de um produto
+        /// </summary>
+        /// <param name="codigoBarras">Codigo de barras do produto</param>
+        /// <param name="quantidade">Quantidade a ser adicionada ou removida</param>
+        /// <param name="isAdicionar">True para adicionar ao estoque, False para remover</param>
+        /// <returns>True se a atualizacao foi bem sucedida, False caso contrario</returns>
         public static bool AtualizarEstoque(string codigoBarras, int quantidade, bool isAdicionar)
         {
             try
@@ -183,7 +209,10 @@ namespace SistemaVendaGeek.Services
             }
         }
 
-        // Lista todos os produtos cadastrados no banco de dados
+        /// <summary>
+        /// Lista todos os produtos cadastrados no banco de dados
+        /// </summary>
+        /// <returns>Lista de objetos ProdutoInfo com todos os produtos</returns>
         public static List<ProdutoInfo> ListarTodosProdutos()
         {
             var produtos = new List<ProdutoInfo>();
@@ -225,17 +254,16 @@ namespace SistemaVendaGeek.Services
         }
     }
 
-    // Classe simples para carregar os dados de um produto.
     public class ProdutoInfo
     {
-        public string CodigoBarras { get; set; }
-        public string Nome { get; set; }
-        public string Categoria { get; set; }
-        public string Fabricante { get; set; }
+        public string CodigoBarras { get; set; } = string.Empty;
+        public string Nome { get; set; } = string.Empty;
+        public string Categoria { get; set; } = string.Empty;
+        public string Fabricante { get; set; } = string.Empty;
         public int QuantidadeEstoque { get; set; }
         public decimal Valor { get; set; }
         public bool IsRaro { get; set; }
-        public string Plataforma { get; set; }
+        public string Plataforma { get; set; } = string.Empty;
         public int PrazoGarantia { get; set; }
     }
 }

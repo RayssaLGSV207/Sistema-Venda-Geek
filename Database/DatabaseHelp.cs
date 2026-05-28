@@ -18,22 +18,21 @@ namespace SistemaVendaGeek.Database
                     SQLiteConnection.CreateFile("SistemaVendaGeek.db");
                     CriarTabelas();
                     InserirDadosTeste();
-                    MessageBox.Show("✅ Banco de dados criado com 35 produtos, 3 usuários e 20 clientes!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("Banco de dados criado com 35 produtos, 3 usuarios e 20 clientes!", "Sucesso", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"❌ ERRO: {ex.Message}", "Falha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("ERRO: " + ex.Message, "Falha", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private static void CriarTabelas()
         {
-            using (var conn = new SQLiteConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
 
-                // Tabela Usuario
                 string sqlUsuario = @"
                     CREATE TABLE Usuario (
                         Login TEXT PRIMARY KEY,
@@ -43,7 +42,6 @@ namespace SistemaVendaGeek.Database
                 using (var cmd = new SQLiteCommand(sqlUsuario, conn))
                     cmd.ExecuteNonQuery();
 
-                // Tabela Produto
                 string sqlProduto = @"
                     CREATE TABLE Produto (
                         CodigoBarras TEXT PRIMARY KEY,
@@ -59,7 +57,6 @@ namespace SistemaVendaGeek.Database
                 using (var cmd = new SQLiteCommand(sqlProduto, conn))
                     cmd.ExecuteNonQuery();
 
-                // Tabela Cliente
                 string sqlCliente = @"
                     CREATE TABLE Cliente (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -74,7 +71,6 @@ namespace SistemaVendaGeek.Database
                 using (var cmd = new SQLiteCommand(sqlCliente, conn))
                     cmd.ExecuteNonQuery();
 
-                // Tabela Venda
                 string sqlVenda = @"
                     CREATE TABLE Venda (
                         CodigoVenda TEXT PRIMARY KEY,
@@ -87,7 +83,6 @@ namespace SistemaVendaGeek.Database
                 using (var cmd = new SQLiteCommand(sqlVenda, conn))
                     cmd.ExecuteNonQuery();
 
-                // Tabela ItemVenda
                 string sqlItemVenda = @"
                     CREATE TABLE ItemVenda (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -107,11 +102,10 @@ namespace SistemaVendaGeek.Database
 
         private static void InserirDadosTeste()
         {
-            using (var conn = new SQLiteConnection(_connectionString))
+            using (var conn = GetConnection())
             {
                 conn.Open();
 
-                // USUARIOS DE TESTE (3 usuários)
                 string sqlUsuarios = @"
                     INSERT OR IGNORE INTO Usuario (Login, Senha, Perfil) VALUES
                     ('atendente', '123', 'Atendente'),
@@ -120,7 +114,6 @@ namespace SistemaVendaGeek.Database
                 using (var cmd = new SQLiteCommand(sqlUsuarios, conn))
                     cmd.ExecuteNonQuery();
 
-                // 35 PRODUTOS GEEK (CORRETO - SEM COMENTÁRIOS DENTRO DO SQL)
                 string sqlProdutos = @"
                     INSERT OR IGNORE INTO Produto (CodigoBarras, Nome, Categoria, Fabricante, Valor, QuantidadeEstoque, IsRaro, Plataforma, PrazoGarantia) VALUES
                     ('JOGO001', 'The Legend of Zelda: Tears of the Kingdom', 'Jogo', 'Nintendo', 349.90, 25, 0, 'Switch', 12),
@@ -157,7 +150,6 @@ namespace SistemaVendaGeek.Database
                 using (var cmd = new SQLiteCommand(sqlProdutos, conn))
                     cmd.ExecuteNonQuery();
 
-                // 20 CLIENTES CADASTRADOS
                 string sqlClientes = @"
                     INSERT OR IGNORE INTO Cliente (Nome, CPF, RG, DataCadastro, Endereco, Telefone, Email) VALUES
                     ('Joao Silva', '11122233344', 'MG11122233', date('now'), 'Rua das Flores, 100 - Centro, Sao Paulo/SP', '(11) 91234-5678', 'joao.silva@email.com'),
@@ -188,9 +180,84 @@ namespace SistemaVendaGeek.Database
             }
         }
 
+        /// <summary>
+        /// Cria e retorna uma nova conexao com o banco de dados
+        /// </summary>
+        /// <returns>Nova instancia de SQLiteConnection</returns>
         public static SQLiteConnection GetConnection()
         {
             return new SQLiteConnection(_connectionString);
+        }
+
+        /// <summary>
+        /// Realiza backup do banco de dados na pasta Backups
+        /// </summary>
+        public static void RealizarBackup()
+        {
+            try
+            {
+                string bancoOriginal = "SistemaVendaGeek.db";
+                if (!File.Exists(bancoOriginal))
+                {
+                    return;
+                }
+
+                string dataAtual = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                string nomeBackup = $"SistemaVendaGeek_Backup_{dataAtual}.db";
+                
+                string pastaBackup = "Backups";
+                if (!Directory.Exists(pastaBackup))
+                {
+                    Directory.CreateDirectory(pastaBackup);
+                }
+                
+                string caminhoBackup = Path.Combine(pastaBackup, nomeBackup);
+                File.Copy(bancoOriginal, caminhoBackup, true);
+                
+                var backupsExistentes = Directory.GetFiles(pastaBackup, "SistemaVendaGeek_Backup_*.db");
+                if (backupsExistentes.Length > 10)
+                {
+                    for (int i = 0; i < backupsExistentes.Length - 10; i++)
+                    {
+                        File.Delete(backupsExistentes[i]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro ao realizar backup: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// Realiza backup automatico se passaram mais de 24 horas desde o ultimo backup
+        /// </summary>
+        public static void RealizarBackupAutomatico()
+        {
+            try
+            {
+                string arquivoConfig = "config_backup.txt";
+                DateTime ultimoBackup = DateTime.MinValue;
+                
+                if (File.Exists(arquivoConfig))
+                {
+                    string conteudo = File.ReadAllText(arquivoConfig);
+                    if (DateTime.TryParse(conteudo, out ultimoBackup))
+                    {
+                        if ((DateTime.Now - ultimoBackup).TotalHours < 24)
+                        {
+                            return;
+                        }
+                    }
+                }
+                
+                RealizarBackup();
+                File.WriteAllText(arquivoConfig, DateTime.Now.ToString());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Erro no backup automatico: " + ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

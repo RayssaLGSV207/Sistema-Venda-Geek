@@ -2,6 +2,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using SistemaVendaGeek.Services;
+using SistemaVendaGeek.Database;
 
 namespace SistemaVendaGeek.Forms
 {
@@ -182,6 +183,13 @@ namespace SistemaVendaGeek.Forms
             this.txtClienteNome.Font = new Font("Arial", 12);
             this.txtClienteNome.ReadOnly = true;
             this.txtClienteNome.BackColor = Color.LightGray;
+
+            this.btnBuscarCliente.Text = "&BUSCAR CLIENTE";
+            this.btnAdicionar.Text = "&ADICIONAR";
+            this.btnRemoverItem.Text = "&REMOVER ITEM";
+            this.btnVoltar.Text = "&VOLTAR";
+            this.btnCancelar.Text = "&CANCELAR VENDA";
+            this.btnFinalizar.Text = "&FINALIZAR VENDA";
 
             this.gbxCliente.Controls.Add(this.lblClienteCPF);
             this.gbxCliente.Controls.Add(this.txtClienteCPF);
@@ -531,70 +539,92 @@ namespace SistemaVendaGeek.Forms
             }
         }
 
-private void btnFinalizar_Click(object sender, EventArgs e)
-{
-    if (dgvCarrinho.Rows.Count == 0)
-    {
-        MostrarMensagemGrande("CARRINHO VAZIO", "Adicione pelo menos um produto ao carrinho antes de finalizar.", MessageBoxIcon.Warning);
-        return;
-    }
-
-    if (string.IsNullOrWhiteSpace(txtClienteCPF.Text))
-    {
-        MostrarMensagemGrande("CLIENTE NAO IDENTIFICADO", "Informe o CPF do cliente para finalizar a venda.", MessageBoxIcon.Warning);
-        return;
-    }
-
-    string formaPagamento = cmbFormaPagamento.SelectedItem.ToString();
-    string codigoBarras = dgvCarrinho.Rows[0].Cells["CodigoBarras"].Value.ToString();
-    int quantidade = Convert.ToInt32(dgvCarrinho.Rows[0].Cells["Quantidade"].Value);
-    decimal total = decimal.Parse(txtTotal.Text);
-
-    // Usa o método existente RegistrarVenda
-    string codigoVenda = VendaService.RegistrarVenda(codigoBarras, quantidade, txtClienteCPF.Text.Trim());
-    
-    // Se não retornou código, cria um novo
-    if (string.IsNullOrEmpty(codigoVenda))
-    {
-        codigoVenda = Guid.NewGuid().ToString();
-    }
-
-    if (!string.IsNullOrEmpty(codigoVenda))
-    {
-        VendaService.AtualizarStatusVenda(codigoVenda, "Finalizada");
-        SistemaFinanceiroService.RegistrarVendaFinanceiro(codigoVenda, total, formaPagamento);
-
-        string detalhesProdutos = "";
-        foreach (DataGridViewRow row in dgvCarrinho.Rows)
+        private void btnFinalizar_Click(object sender, EventArgs e)
         {
-            string nome = row.Cells["Produto"].Value.ToString();
-            int qtd = Convert.ToInt32(row.Cells["Quantidade"].Value);
-            decimal subtotal = Convert.ToDecimal(row.Cells["Subtotal"].Value);
-            detalhesProdutos += $"• {nome} - {qtd} x R$ {subtotal:F2}\n";
+            if (dgvCarrinho.Rows.Count == 0)
+            {
+                MostrarMensagemGrande("CARRINHO VAZIO", "Adicione pelo menos um produto ao carrinho antes de finalizar.", MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(txtClienteCPF.Text))
+            {
+                MostrarMensagemGrande("CLIENTE NAO IDENTIFICADO", "Informe o CPF do cliente para finalizar a venda.", MessageBoxIcon.Warning);
+                return;
+            }
+
+            string formaPagamento = cmbFormaPagamento.SelectedItem?.ToString() ?? "Dinheiro";
+
+            if (dgvCarrinho.Rows.Count == 0 || dgvCarrinho.Rows[0].Cells["CodigoBarras"].Value == null)
+            {
+                MostrarMensagemGrande("ERRO", "Nenhum produto valido no carrinho.", MessageBoxIcon.Error);
+                return;
+            }
+
+            string codigoBarras = dgvCarrinho.Rows[0].Cells["CodigoBarras"].Value.ToString();
+            int quantidade = Convert.ToInt32(dgvCarrinho.Rows[0].Cells["Quantidade"].Value);
+            decimal total = decimal.Parse(txtTotal.Text);
+
+            string codigoVenda = VendaService.RegistrarVenda(codigoBarras, quantidade, txtClienteCPF.Text.Trim());
+
+            if (string.IsNullOrEmpty(codigoVenda))
+            {
+                codigoVenda = Guid.NewGuid().ToString();
+            }
+
+            if (!string.IsNullOrEmpty(codigoVenda))
+            {
+                VendaService.AtualizarStatusVenda(codigoVenda, "Finalizada");
+                SistemaFinanceiroService.RegistrarVendaFinanceiro(codigoVenda, total, formaPagamento);
+
+                try
+                {
+                    DatabaseHelper.RealizarBackupAutomatico();
+                }
+                catch (Exception ex)
+                {
+                    // Apenas loga o erro, nao impede a finalizacao da venda
+                    System.Diagnostics.Debug.WriteLine("Erro no backup: " + ex.Message);
+                }
+
+                string detalhesProdutos = "";
+                foreach (DataGridViewRow row in dgvCarrinho.Rows)
+                {
+                    if (row.Cells["Produto"].Value != null)
+                    {
+                        string nome = row.Cells["Produto"].Value.ToString();
+                        int qtd = Convert.ToInt32(row.Cells["Quantidade"].Value);
+                        decimal subtotal = Convert.ToDecimal(row.Cells["Subtotal"].Value);
+                        detalhesProdutos += string.Format("{0} - {1} x R$ {2:F2}\n", nome, qtd, subtotal);
+                    }
+                }
+
+                string nomeCliente = string.IsNullOrEmpty(txtClienteNome.Text) ? "Cliente nao identificado" : txtClienteNome.Text;
+                string codigoExibido = codigoVenda.Length > 8 ? codigoVenda.Substring(0, 8) : codigoVenda;
+
+                MostrarMensagemComDetalhes("VENDA REALIZADA COM SUCESSO!",
+                    string.Format("{0}\n{1}\n{2}\n{3}\n{4}\n{5}\n{6}\n{7}\n{8}\n{9}",
+                        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+                        "CLIENTE: " + nomeCliente,
+                        "CODIGO DA VENDA: " + codigoExibido,
+                        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+                        "PRODUTOS:",
+                        detalhesProdutos,
+                        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+                        "TOTAL: R$ " + total.ToString("F2"),
+                        "PAGAMENTO: " + formaPagamento,
+                        "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nRegistro enviado ao sistema financeiro."));
+
+                dgvCarrinho.Rows.Clear();
+                txtTotal.Text = "0,00";
+                txtClienteCPF.Text = "";
+                txtClienteNome.Text = "";
+                txtCodigoBarras.Text = "";
+                numQuantidade.Value = 1;
+                _codigoVendaAtual = null;
+                txtClienteCPF.Focus();
+            }
         }
-
-        MostrarMensagemComDetalhes("VENDA REALIZADA COM SUCESSO!",
-            $"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
-            $"CLIENTE: {txtClienteNome.Text}\n" +
-            $"CODIGO DA VENDA: {codigoVenda.Substring(0, 8)}\n" +
-            $"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
-            $"PRODUTOS:\n{detalhesProdutos}\n" +
-            $"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
-            $"TOTAL: R$ {total:F2}\n" +
-            $"PAGAMENTO: {formaPagamento}\n" +
-            $"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
-            $"Registro enviado ao sistema financeiro.");
-
-        dgvCarrinho.Rows.Clear();
-        txtTotal.Text = "0,00";
-        txtClienteCPF.Text = "";
-        txtClienteNome.Text = "";
-        txtCodigoBarras.Text = "";
-        numQuantidade.Value = 1;
-        _codigoVendaAtual = null;
-        txtClienteCPF.Focus();
-    }
-}
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             if (dgvCarrinho.Rows.Count == 0)
@@ -687,7 +717,7 @@ private void btnFinalizar_Click(object sender, EventArgs e)
 
                 if (!credenciaisValidas)
                 {
-                    return; 
+                    return;
                 }
             }
             // Se for Supervisor, continua direto sem pedir autenticação

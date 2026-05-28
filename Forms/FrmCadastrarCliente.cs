@@ -179,6 +179,17 @@ namespace SistemaVendaGeek.Forms
             this.btnVoltar.Cursor = Cursors.Hand;
             this.btnVoltar.Click += BtnVoltar_Click;
 
+
+            this.btnSalvar.Text = "&SALVAR";       // Alt+S
+            this.btnCancelar.Text = "&CANCELAR";   // Alt+C
+            this.btnVoltar.Text = "&VOLTAR";       // Alt+V
+
+            this.lblNome.Text = "&Nome Completo:";
+            this.lblCPF.Text = "&CPF:";
+            this.lblRG.Text = "&RG:";
+            this.lblEndereco.Text = "&Endereco:";
+            this.lblTelefone.Text = "&Telefone:";
+            this.lblEmail.Text = "&E-mail:";
             this.pnlCentral.Controls.Add(this.lblTitulo);
             this.pnlCentral.Controls.Add(this.lblNome);
             this.pnlCentral.Controls.Add(this.txtNome);

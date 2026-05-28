@@ -2,32 +2,16 @@ using System;
 
 namespace SistemaVendaGeek.Models
 {
-    // Representa um cliente da loja.
     public class Cliente
     {
-        // Código único do cliente (gerado automaticamente pelo banco).
         public int Id { get; set; }
-
-        // Nome completo do cliente.
-        public string Nome { get; set; }
-
-        // CPF do cliente (11 dígitos, único).
-        public string CPF { get; set; }
-
-        // RG do cliente.
-        public string RG { get; set; }
-
-        // Data de cadastro do cliente.
+        public string Nome { get; set; } = string.Empty;
+        public string CPF { get; set; } = string.Empty;
+        public string RG { get; set; } = string.Empty;
         public DateTime DataCadastro { get; set; }
-
-        // Endereço completo do cliente.
-        public string Endereco { get; set; }
-
-        // Telefone para contato.
-        public string Telefone { get; set; }
-
-        // E-mail do cliente.
-        public string Email { get; set; }
+        public string Endereco { get; set; } = string.Empty;
+        public string Telefone { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
 
         public Cliente()
         {
@@ -36,10 +20,13 @@ namespace SistemaVendaGeek.Models
 
         public Cliente(string nome, string cpf, string telefone)
         {
-            Nome = nome;
-            CPF = cpf;
-            Telefone = telefone;
+            Nome = nome ?? string.Empty;
+            CPF = cpf ?? string.Empty;
+            Telefone = telefone ?? string.Empty;
             DataCadastro = DateTime.Now;
+            RG = string.Empty;
+            Endereco = string.Empty;
+            Email = string.Empty;
         }
 
         public override string ToString()

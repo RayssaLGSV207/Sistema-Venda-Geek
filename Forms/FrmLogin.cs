@@ -31,6 +31,7 @@ namespace SistemaVendaGeek.Forms
             this.txtSenha = new TextBox();
             this.btnEntrar = new Button();
             this.btnSair = new Button();
+            
 
             // Form
             this.Text = "Login - Vendas Geek";
@@ -104,6 +105,10 @@ namespace SistemaVendaGeek.Forms
             this.btnSair.FlatAppearance.BorderColor = Color.DarkRed;
             this.btnSair.Cursor = Cursors.Hand;
             this.btnSair.Click += (s, e) => Application.Exit();
+
+            // Botão Entrar (Alt+E) e Sair (Alt+s)
+            this.btnEntrar.Text = "&ENTRAR";
+            this.btnSair.Text = "&SAIR";
 
             this.pnlCentral.Controls.Add(this.lblTitulo);
             this.pnlCentral.Controls.Add(this.lblUsuario);

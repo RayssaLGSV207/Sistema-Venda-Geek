@@ -147,6 +147,15 @@ namespace SistemaVendaGeek.Forms
             this.btnSair.Cursor = Cursors.Hand;
             this.btnSair.Click += BtnSair_Click;
 
+            // Atalhos para botoes principais do Dashboard
+            this.btnNovaVenda.Text = "&NOVA VENDA"; // Alt+N
+            this.btnConsultarPreco.Text = "&CONSULTAR PRECO"; // Alt+C
+            this.btnGestaoProdutos.Text = "&GESTAO DE PRODUTOS"; // Alt+G
+            this.btnCadastrarCliente.Text = "&CADASTRAR CLIENTES"; // Alt+D
+            this.btnConsultarVendas.Text = "&CONSULTAR VENDAS"; // Alt+V
+            this.btnTrocarLogin.Text = "&TROCAR LOGIN"; // Alt+T
+            this.btnSair.Text = "&SAIR";  // Alt+S
+
             this.pnlMenu.Controls.Add(this.btnNovaVenda);
             this.pnlMenu.Controls.Add(this.btnConsultarPreco);
             this.pnlMenu.Controls.Add(this.btnGestaoProdutos);

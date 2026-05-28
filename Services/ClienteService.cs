@@ -8,6 +8,10 @@ namespace SistemaVendaGeek.Services
 {
     public class ClienteService
     {
+        /// <summary>
+        /// Lista todos os clientes cadastrados no sistema
+        /// </summary>
+        /// <returns>Lista de objetos ClienteInfo com dados dos clientes</returns>
         public static List<ClienteInfo> ListarTodosClientes()
         {
             var clientes = new List<ClienteInfo>();
@@ -44,6 +48,11 @@ namespace SistemaVendaGeek.Services
             return clientes;
         }
 
+        /// <summary>
+        /// Busca um cliente pelo CPF
+        /// </summary>
+        /// <param name="cpf">CPF do cliente a ser buscado</param>
+        /// <returns>Objeto ClienteInfo com dados do cliente ou null se nao encontrado</returns>
         public static ClienteInfo BuscarClientePorCPF(string cpf)
         {
             try
@@ -85,12 +94,12 @@ namespace SistemaVendaGeek.Services
     public class ClienteInfo
     {
         public int Id { get; set; }
-        public string Nome { get; set; }
-        public string CPF { get; set; }
-        public string RG { get; set; }
-        public string DataCadastro { get; set; }
-        public string Endereco { get; set; }
-        public string Telefone { get; set; }
-        public string Email { get; set; }
+        public string Nome { get; set; } = string.Empty;
+        public string CPF { get; set; } = string.Empty;
+        public string RG { get; set; } = string.Empty;
+        public string DataCadastro { get; set; } = string.Empty;
+        public string Endereco { get; set; } = string.Empty;
+        public string Telefone { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
     }
 }

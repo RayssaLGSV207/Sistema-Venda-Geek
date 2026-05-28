@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using SistemaVendaGeek.Services;
@@ -9,93 +8,61 @@ namespace SistemaVendaGeek.Forms
     public partial class FrmConsultarPreco : Form
     {
         private Label lblTitulo;
-        private Label lblDica;
-        private Label lblPesquisa;
-        private TextBox txtPesquisa;
-        private Button btnPesquisar;
+        private TextBox txtBusca;
         private DataGridView dgvProdutos;
-        private Label lblTotalProdutos;
-        private Button btnLimpar;
         private Button btnVoltar;
         private Panel pnlCentral;
-        private List<ProdutoInfo> _todosProdutos;
+        private string _perfilUsuario;
 
         public FrmConsultarPreco(string perfilUsuario)
         {
+            _perfilUsuario = perfilUsuario;
             InitializeComponent();
-            CarregarTodosProdutos();
+            CarregarProdutos("");
         }
 
         private void InitializeComponent()
         {
             this.pnlCentral = new Panel();
             this.lblTitulo = new Label();
-            this.lblDica = new Label();
-            this.lblPesquisa = new Label();
-            this.txtPesquisa = new TextBox();
-            this.btnPesquisar = new Button();
+            this.txtBusca = new TextBox();
             this.dgvProdutos = new DataGridView();
-            this.lblTotalProdutos = new Label();
-            this.btnLimpar = new Button();
             this.btnVoltar = new Button();
 
             // FORMULARIO PRINCIPAL
-            this.Text = "Consultar Produtos - Vendas Geek";
-            this.Size = new Size(850, 620);
+            this.Text = "Consultar Preco - Vendas Geek";
+            this.Size = new Size(900, 620);
             this.StartPosition = FormStartPosition.CenterScreen;
             this.BackColor = Color.WhiteSmoke;
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
 
             // PANEL CENTRAL
-            this.pnlCentral.Size = new Size(800, 560);
+            this.pnlCentral.Size = new Size(850, 560);
             this.pnlCentral.Location = new Point(25, 20);
             this.pnlCentral.BackColor = Color.Transparent;
 
             // TITULO
-            this.lblTitulo.Text = "CONSULTAR PRODUTOS";
+            this.lblTitulo.Text = "CONSULTAR PRECO";
             this.lblTitulo.Font = new Font("Arial", 22, FontStyle.Bold);
-            this.lblTitulo.Size = new Size(800, 50);
+            this.lblTitulo.Size = new Size(850, 50);
             this.lblTitulo.Location = new Point(0, 10);
             this.lblTitulo.TextAlign = ContentAlignment.MiddleCenter;
             this.lblTitulo.ForeColor = Color.Black;
 
-            // DICA
-            this.lblDica.Text = "Pesquise por Codigo, Nome ou Categoria";
-            this.lblDica.Font = new Font("Arial", 12, FontStyle.Bold);
-            this.lblDica.Size = new Size(800, 30);
-            this.lblDica.Location = new Point(0, 65);
-            this.lblDica.TextAlign = ContentAlignment.MiddleCenter;
-            this.lblDica.ForeColor = Color.DarkBlue;
-
-            // PESQUISA
-            this.lblPesquisa.Text = "Buscar:";
-            this.lblPesquisa.Font = new Font("Arial", 12, FontStyle.Bold);
-            this.lblPesquisa.Size = new Size(80, 30);
-            this.lblPesquisa.Location = new Point(40, 115);
-            this.lblPesquisa.TextAlign = ContentAlignment.MiddleRight;
-
-            this.txtPesquisa.Size = new Size(450, 35);
-            this.txtPesquisa.Location = new Point(130, 115);
-            this.txtPesquisa.Font = new Font("Arial", 12);
-            this.txtPesquisa.BackColor = Color.White;
-            this.txtPesquisa.TextChanged += new EventHandler(txtPesquisa_TextChanged);
-
-            this.btnPesquisar.Text = "PESQUISAR";
-            this.btnPesquisar.Size = new Size(130, 37);
-            this.btnPesquisar.Location = new Point(600, 113);
-            this.btnPesquisar.Font = new Font("Arial", 11, FontStyle.Bold);
-            this.btnPesquisar.BackColor = Color.DodgerBlue;
-            this.btnPesquisar.ForeColor = Color.White;
-            this.btnPesquisar.FlatStyle = FlatStyle.Flat;
-            this.btnPesquisar.FlatAppearance.BorderSize = 2;
-            this.btnPesquisar.FlatAppearance.BorderColor = Color.DarkBlue;
-            this.btnPesquisar.Cursor = Cursors.Hand;
-            this.btnPesquisar.Click += new EventHandler(btnPesquisar_Click);
+            // CAMPO DE BUSCA
+            this.txtBusca.Size = new Size(400, 35);
+            this.txtBusca.Location = new Point(225, 70);
+            this.txtBusca.Font = new Font("Arial", 12);
+            this.txtBusca.Text = "Digite o codigo, nome ou categoria para buscar...";
+            this.txtBusca.ForeColor = Color.Gray;
+            this.txtBusca.Enter += TxtBusca_Enter;
+            this.txtBusca.Leave += TxtBusca_Leave;
+            this.txtBusca.TextChanged += TxtBusca_TextChanged;
 
             // DATAGRIDVIEW
-            this.dgvProdutos.Size = new Size(760, 280);
-            this.dgvProdutos.Location = new Point(20, 170);
+            this.dgvProdutos.Size = new Size(820, 380);
+            this.dgvProdutos.Location = new Point(15, 120);
             this.dgvProdutos.BackgroundColor = Color.White;
             this.dgvProdutos.AllowUserToAddRows = false;
             this.dgvProdutos.ReadOnly = true;
@@ -103,7 +70,7 @@ namespace SistemaVendaGeek.Forms
             this.dgvProdutos.RowHeadersVisible = false;
             this.dgvProdutos.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             this.dgvProdutos.Font = new Font("Arial", 11);
-            this.dgvProdutos.RowTemplate.Height = 40;
+            this.dgvProdutos.RowTemplate.Height = 35;
 
             // COLUNAS
             this.dgvProdutos.ColumnCount = 6;
@@ -120,69 +87,87 @@ namespace SistemaVendaGeek.Forms
             this.dgvProdutos.Columns[5].Name = "Raro";
             this.dgvProdutos.Columns[5].HeaderText = "RARO";
 
-            // TOTAL
-            this.lblTotalProdutos.Text = "Total de produtos: 0";
-            this.lblTotalProdutos.Font = new Font("Arial", 12, FontStyle.Bold);
-            this.lblTotalProdutos.Size = new Size(250, 30);
-            this.lblTotalProdutos.Location = new Point(20, 465);
-            this.lblTotalProdutos.TextAlign = ContentAlignment.MiddleLeft;
-            this.lblTotalProdutos.ForeColor = Color.DarkSlateBlue;
-
-            // BOTOES
-            this.btnLimpar.Text = "LIMPAR";
-            this.btnLimpar.Size = new Size(130, 45);
-            this.btnLimpar.Location = new Point(500, 460);
-            this.btnLimpar.BackColor = Color.LightGray;
-            this.btnLimpar.ForeColor = Color.Black;
-            this.btnLimpar.Font = new Font("Arial", 11, FontStyle.Bold);
-            this.btnLimpar.FlatStyle = FlatStyle.Flat;
-            this.btnLimpar.FlatAppearance.BorderSize = 2;
-            this.btnLimpar.FlatAppearance.BorderColor = Color.Gray;
-            this.btnLimpar.Cursor = Cursors.Hand;
-            this.btnLimpar.Click += new EventHandler(btnLimpar_Click);
-
-            this.btnVoltar.Text = "VOLTAR";
-            this.btnVoltar.Size = new Size(130, 45);
-            this.btnVoltar.Location = new Point(650, 460);
+            // BOTAO VOLTAR
+            this.btnVoltar.Text = "&VOLTAR";
+            this.btnVoltar.Size = new Size(160, 50);
+            this.btnVoltar.Location = new Point(345, 520);
             this.btnVoltar.BackColor = Color.LightGray;
             this.btnVoltar.ForeColor = Color.Black;
-            this.btnVoltar.Font = new Font("Arial", 11, FontStyle.Bold);
+            this.btnVoltar.Font = new Font("Arial", 12, FontStyle.Bold);
             this.btnVoltar.FlatStyle = FlatStyle.Flat;
             this.btnVoltar.FlatAppearance.BorderSize = 2;
             this.btnVoltar.FlatAppearance.BorderColor = Color.Gray;
             this.btnVoltar.Cursor = Cursors.Hand;
-            this.btnVoltar.Click += new EventHandler(btnVoltar_Click);
+            this.btnVoltar.Click += BtnVoltar_Click;
 
             this.pnlCentral.Controls.Add(this.lblTitulo);
-            this.pnlCentral.Controls.Add(this.lblDica);
-            this.pnlCentral.Controls.Add(this.lblPesquisa);
-            this.pnlCentral.Controls.Add(this.txtPesquisa);
-            this.pnlCentral.Controls.Add(this.btnPesquisar);
+            this.pnlCentral.Controls.Add(this.txtBusca);
             this.pnlCentral.Controls.Add(this.dgvProdutos);
-            this.pnlCentral.Controls.Add(this.lblTotalProdutos);
-            this.pnlCentral.Controls.Add(this.btnLimpar);
             this.pnlCentral.Controls.Add(this.btnVoltar);
 
             this.Controls.Add(this.pnlCentral);
         }
 
-        private void CarregarTodosProdutos()
+        private void TxtBusca_Enter(object sender, EventArgs e)
+        {
+            if (this.txtBusca.Text == "Digite o codigo, nome ou categoria para buscar...")
+            {
+                this.txtBusca.Text = "";
+                this.txtBusca.ForeColor = Color.Black;
+            }
+        }
+
+        private void TxtBusca_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(this.txtBusca.Text))
+            {
+                this.txtBusca.Text = "Digite o codigo, nome ou categoria para buscar...";
+                this.txtBusca.ForeColor = Color.Gray;
+            }
+        }
+
+        private void TxtBusca_TextChanged(object sender, EventArgs e)
+        {
+            string termoBusca = this.txtBusca.Text;
+            if (termoBusca == "Digite o codigo, nome ou categoria para buscar...")
+            {
+                termoBusca = "";
+            }
+            CarregarProdutos(termoBusca);
+        }
+
+        private void CarregarProdutos(string termoBusca)
         {
             try
             {
-                _todosProdutos = ProdutoService.ListarTodosProdutos();
-                if (_todosProdutos == null || _todosProdutos.Count == 0)
+                var produtos = ProdutoService.ListarTodosProdutos();
+                dgvProdutos.Rows.Clear();
+
+                foreach (var produto in produtos)
                 {
-                    _todosProdutos = new List<ProdutoInfo>();
-                    MostrarMensagemGrande("Aviso", "Nenhum produto encontrado no banco de dados.", MessageBoxIcon.Warning);
+                    if (!string.IsNullOrEmpty(termoBusca))
+                    {
+                        if (!produto.CodigoBarras.ToLower().Contains(termoBusca.ToLower()) &&
+                            !produto.Nome.ToLower().Contains(termoBusca.ToLower()) &&
+                            !produto.Categoria.ToLower().Contains(termoBusca.ToLower()))
+                        {
+                            continue;
+                        }
+                    }
+
+                    dgvProdutos.Rows.Add(
+                        produto.CodigoBarras,
+                        produto.Nome,
+                        produto.Categoria,
+                        $"R$ {produto.Valor:F2}",
+                        produto.QuantidadeEstoque,
+                        produto.IsRaro ? "Sim" : "Nao"
+                    );
                 }
-                AtualizarGrid(_todosProdutos);
             }
             catch (Exception ex)
             {
-                MostrarMensagemGrande("Erro", $"Erro ao carregar produtos: {ex.Message}", MessageBoxIcon.Error);
-                _todosProdutos = new List<ProdutoInfo>();
-                AtualizarGrid(_todosProdutos);
+                MostrarMensagemGrande("Erro", "Erro ao carregar produtos: " + ex.Message, MessageBoxIcon.Error);
             }
         }
 
@@ -216,52 +201,9 @@ namespace SistemaVendaGeek.Forms
             msgForm.ShowDialog();
         }
 
-        private void AtualizarGrid(List<ProdutoInfo> produtos)
+        private void BtnVoltar_Click(object sender, EventArgs e)
         {
-            dgvProdutos.Rows.Clear();
-            foreach (var produto in produtos)
-            {
-                dgvProdutos.Rows.Add(
-                    produto.CodigoBarras,
-                    produto.Nome,
-                    produto.Categoria,
-                    $"R$ {produto.Valor:F2}",
-                    produto.QuantidadeEstoque,
-                    produto.IsRaro ? "Sim" : "Nao"
-                );
-            }
-            lblTotalProdutos.Text = $"Total de produtos: {produtos.Count}";
+            this.Close();
         }
-
-        private void FiltrarProdutos(string termo)
-        {
-            if (_todosProdutos == null)
-            {
-                CarregarTodosProdutos();
-                return;
-            }
-            if (string.IsNullOrWhiteSpace(termo))
-            {
-                AtualizarGrid(_todosProdutos);
-                return;
-            }
-            termo = termo.ToLower();
-            var filtrados = _todosProdutos.FindAll(p =>
-                p.CodigoBarras.ToLower().Contains(termo) ||
-                p.Nome.ToLower().Contains(termo) ||
-                p.Categoria.ToLower().Contains(termo) ||
-                (p.Fabricante != null && p.Fabricante.ToLower().Contains(termo))
-            );
-            AtualizarGrid(filtrados);
-            if (filtrados.Count == 0)
-            {
-                MostrarMensagemGrande("Pesquisa", $"Nenhum produto encontrado com o termo: '{txtPesquisa.Text}'", MessageBoxIcon.Information);
-            }
-        }
-
-        private void btnPesquisar_Click(object sender, EventArgs e) => FiltrarProdutos(txtPesquisa.Text.Trim());
-        private void txtPesquisa_TextChanged(object sender, EventArgs e) => FiltrarProdutos(txtPesquisa.Text.Trim());
-        private void btnLimpar_Click(object sender, EventArgs e) { txtPesquisa.Text = ""; AtualizarGrid(_todosProdutos); txtPesquisa.Focus(); }
-        private void btnVoltar_Click(object sender, EventArgs e) => this.Close();
     }
 }

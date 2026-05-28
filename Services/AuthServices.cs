@@ -8,10 +8,15 @@ namespace SistemaVendaGeek.Services
 {
     public class AuthService
     {
-        // Guarda o usuário que está logado no momento
-        private static UsuarioAutenticado _usuarioLogado;
+        private static UsuarioAutenticado? _usuarioLogado;
 
-        // Tenta fazer login com usuário e senha. Retorna true se conseguir e devolve o perfil.
+        /// <summary>
+        /// Autentica um usuario no sistema verificando login e senha no banco de dados
+        /// </summary>
+        /// <param name="login">Nome de usuario para autenticacao</param>
+        /// <param name="senha">Senha do usuario</param>
+        /// <param name="perfil">Retorna o perfil do usuario autenticado</param>
+        /// <returns>True se autenticacao for bem sucedida, False caso contrario</returns>
         public static bool Autenticar(string login, string senha, out string perfil)
         {
             perfil = "";
@@ -30,7 +35,7 @@ namespace SistemaVendaGeek.Services
                         var resultado = cmd.ExecuteScalar();
                         if (resultado != null)
                         {
-                            perfil = resultado.ToString();
+                            perfil = resultado.ToString() ?? "";
                             _usuarioLogado = new UsuarioAutenticado
                             {
                                 Login = login,
@@ -54,26 +59,39 @@ namespace SistemaVendaGeek.Services
             }
         }
 
-        //Verifica se o usuário logado é Supervisor.
+        /// <summary>
+        /// Verifica se o usuario logado atualmente possui perfil de Supervisor
+        /// </summary>
+        /// <returns>True se for Supervisor, False caso contrario</returns>
         public static bool IsSupervisor()
         {
             return _usuarioLogado?.Perfil == "Supervisor";
         }
 
-        //Verifica se o usuário logado é Estoquista.
+        /// <summary>
+        /// Verifica se o usuario logado atualmente possui perfil de Estoquista
+        /// </summary>
+        /// <returns>True se for Estoquista, False caso contrario</returns>
         public static bool IsEstoquista()
         {
             return _usuarioLogado?.Perfil == "Estoquista";
         }
 
-        // Verifica se o usuário logado é Atendente.
+        /// <summary>
+        /// Verifica se o usuario logado atualmente possui perfil de Atendente
+        /// </summary>
+        /// <returns>True se for Atendente, False caso contrario</returns>
         public static bool IsAtendente()
         {
             return _usuarioLogado?.Perfil == "Atendente";
         }
 
-        //Verifica se um login/senha específico pertence a um Supervisor.
-        // Usado para ações que exigem confirmação do supervisor.
+        /// <summary>
+        /// Valida se as credenciais fornecidas pertencem a um usuario com perfil Supervisor
+        /// </summary>
+        /// <param name="login">Login do supervisor</param>
+        /// <param name="senha">Senha do supervisor</param>
+        /// <returns>True se as credenciais forem validas e pertencerem a um supervisor</returns>
         public static bool ValidarCredenciaisSupervisor(string login, string senha)
         {
             try
@@ -98,17 +116,18 @@ namespace SistemaVendaGeek.Services
             }
         }
 
-        // Faz logout do usuário atual.
+        /// <summary>
+        /// Realiza logout do usuario atual, limpando os dados da sessao
+        /// </summary>
         public static void Logout()
         {
             _usuarioLogado = null;
         }
     }
 
-    // Guarda os dados do usuário que está logado.
     public class UsuarioAutenticado
     {
-        public string Login { get; set; }
-        public string Perfil { get; set; }
+        public string Login { get; set; } = string.Empty;
+        public string Perfil { get; set; } = string.Empty;
     }
 }

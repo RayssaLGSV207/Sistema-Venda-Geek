@@ -1,19 +1,23 @@
+using System;
 using System.Windows.Forms;
-using SistemaVendaGeek.Forms;
 using SistemaVendaGeek.Database;
+using SistemaVendaGeek.Forms;
 
-namespace SistemaVendaGeek;
-
-internal static class Program
+namespace SistemaVendaGeek
 {
-    [STAThread]
-    static void Main()
+    static class Program
     {
-        ApplicationConfiguration.Initialize();
-
-        // cria o banco de dados na inicialização
-        DatabaseHelper.CriarBanco();
-
-        Application.Run(new FrmLogin());
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            
+            DatabaseHelper.CriarBanco();
+            
+            DatabaseHelper.RealizarBackupAutomatico();
+            
+            Application.Run(new FrmLogin());
+        }
     }
 }

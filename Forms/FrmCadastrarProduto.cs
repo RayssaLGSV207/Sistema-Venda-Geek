@@ -286,6 +286,11 @@ namespace SistemaVendaGeek.Forms
             this.btnVoltar.Cursor = Cursors.Hand;
             this.btnVoltar.Click += BtnVoltar_Click;
             
+            // Botoes da aba CADASTRAR
+            this.btnSalvar.Text = "&SALVAR";
+            this.btnCancelar.Text = "&CANCELAR";
+            this.btnVoltar.Text = "&VOLTAR";
+            
             // Controles à aba Cadastrar
             this.tabCadastrar.Controls.Add(this.lblCodigoBarras);
             this.tabCadastrar.Controls.Add(this.txtCodigoBarras);
@@ -400,6 +405,10 @@ namespace SistemaVendaGeek.Forms
             this.btnAtualizarEstoque.Cursor = Cursors.Hand;
             this.btnAtualizarEstoque.Click += BtnAtualizarEstoque_Click;
             
+            // Botoes da aba ATUALIZAR ESTOQUE
+            this.btnBuscar.Text = "&BUSCAR PRODUTO";
+            this.btnAtualizarEstoque.Text = "&ATUALIZAR";
+
             // controles à aba Atualizar
             this.tabAtualizar.Controls.Add(this.lblBuscarCodigo);
             this.tabAtualizar.Controls.Add(this.txtBuscarCodigo);

@@ -4,24 +4,25 @@ using System.Windows.Forms;
 
 namespace SistemaVendaGeek.Services
 {
-    // Responsável por se comunicar com o sistema financeiro da empresa.
     public static class SistemaFinanceiroService
     {
-        // Arquivo de log que simula o registro no sistema financeiro
         private static readonly string ARQUIVO_LOG = "sistema_financeiro.log";
 
-        // Notifica o sistema financeiro sobre o cancelamento de uma venda.
+        /// <summary>
+        /// Notifica o sistema financeiro sobre o cancelamento de uma venda
+        /// </summary>
+        /// <param name="codigoVenda">Codigo da venda cancelada</param>
+        /// <returns>True se o registro foi bem sucedido, False caso contrario</returns>
         public static bool EnviarCancelamento(string codigoVenda)
         {
             try
             {
                 string mensagem = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Venda CANCELADA: {codigoVenda} - Enviada ao financeiro";
 
-                // Salva no arquivo de log (simula a integração)
                 File.AppendAllText(ARQUIVO_LOG, mensagem + Environment.NewLine);
 
                 MessageBox.Show($"Venda {codigoVenda.Substring(0, 8)} cancelada.\n" +
-                    "Código enviado ao sistema financeiro com sucesso!",
+                    "Codigo enviado ao sistema financeiro com sucesso!",
                     "Sistema Financeiro", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 return true;
@@ -34,7 +35,11 @@ namespace SistemaVendaGeek.Services
             }
         }
 
-        // Verifica no log se o cancelamento já foi registrado.
+        /// <summary>
+        /// Consulta no log se o cancelamento ja foi registrado no sistema financeiro
+        /// </summary>
+        /// <param name="codigoVenda">Codigo da venda a ser consultada</param>
+        /// <returns>Mensagem com o status da consulta</returns>
         public static string ConsultarStatus(string codigoVenda)
         {
             if (File.Exists(ARQUIVO_LOG))
@@ -43,10 +48,16 @@ namespace SistemaVendaGeek.Services
                 if (log.Contains(codigoVenda))
                     return "Cancelamento registrado no sistema financeiro";
             }
-            return "Cancelamento não encontrado";
+            return "Cancelamento nao encontrado";
         }
 
-        // Registra uma venda finalizada no sistema financeiro.
+        /// <summary>
+        /// Registra uma venda finalizada no sistema financeiro
+        /// </summary>
+        /// <param name="codigoVenda">Codigo da venda finalizada</param>
+        /// <param name="valorTotal">Valor total da venda</param>
+        /// <param name="formaPagamento">Forma de pagamento utilizada</param>
+        /// <returns>True se o registro foi bem sucedido, False caso contrario</returns>
         public static bool RegistrarVendaFinanceiro(string codigoVenda, decimal valorTotal, string formaPagamento)
         {
             try
